@@ -1,0 +1,198 @@
+<div class="show-page">
+  <div class="show-hero">
+    <img
+      src="<%= listing.image %>"
+      alt="<%= listing.title %>"
+      class="show-image"
+    />
+    <span class="show-category"><%= listing.category %></span>
+  </div>
+
+  <div class="show-content">
+    <div class="show-main">
+      <div class="show-header">
+        <h1 class="show-title"><%= listing.title %></h1>
+        <div class="show-meta">
+          <span class="show-location">
+            <i class="fa fa-map-marker-alt"></i>
+            <%= listing.location %>, <%= listing.country %>
+          </span>
+          <span class="show-rooms">
+            <i class="fa fa-door-open"></i>
+            <%= listing.rooms %> Room<%= listing.rooms > 1 ? 's' : '' %>
+          </span>
+        </div>
+      </div>
+
+      <div class="show-description">
+        <h3>About this place</h3>
+        <p><%= listing.description || 'A wonderful place to stay!' %></p>
+      </div>
+
+      <!-- ${listing.amenities && listing.amenities.length ? `
+      <div class="show-amenities">
+        <h3>Amenities</h3>
+        <div class="amenities-grid">
+          ${listing.amenities.map(a => `<span class="amenity-tag"
+            ><i class="fa fa-check"></i> ${a}</span
+          >`).join('')}
+        </div>
+      </div>
+      ` : ''} -->
+
+      <% if (listing.amenities && listing.amenities.length) { %>
+      <div class="amenities-list">
+        <% listing.amenities.forEach(a => { %>
+        <span class="amenity-tag"><i class="fa fa-check"></i> <%= a %></span>
+        <% }) %>
+      </div>
+      <% } %>
+
+      <div class="show-owner">
+        <i class="fa fa-user-circle fa-2x"></i>
+        <div>
+          <p class="owner-label">Hosted by</p>
+          <p class="owner-name">
+            <%= listing.owner ? listing.owner.name : 'StayPoint Host' %>
+          </p>
+        </div>
+      </div>
+
+      <% if (currUser && listing.owner &&
+      currUser._id.equals(listing.owner._id)) { %>
+      <div class="owner-actions">
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline">
+          <i class="fa fa-edit"></i> Edit Listing
+        </a>
+        <form
+          action="/listings/<%= listing._id %>?_method=DELETE"
+          method="POST"
+          onsubmit="return confirm('Delete this listing?')"
+        >
+          <button type="submit" class="btn btn-danger">
+            <i class="fa fa-trash"></i> Delete
+          </button>
+        </form>
+      </div>
+      <% } %>
+
+      <!-- REVIEWS SECTION -->
+      <div class="reviews-section">
+        <h3>Guest Reviews (<%= listing.reviews.length %>)</h3>
+
+        <% if (listing.reviews.length === 0) { %>
+        <p class="no-reviews">No reviews yet. Be the first!</p>
+        <% } else { %>
+        <div class="reviews-list">
+          <% for (let review of listing.reviews) { %>
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-author">
+                <i class="fa fa-user-circle"></i>
+                <strong
+                  ><%= review.author ? review.author.name : 'Guest' %></strong
+                >
+              </div>
+              <div class="review-rating">
+                <% for(let i = 1; i <= 5; i++) { %>
+                <span class="star <%= i <= review.rating ? 'filled' : '' %>"
+                  >★</span
+                >
+                <% } %>
+              </div>
+            </div>
+            <p class="review-comment"><%= review.comment %></p>
+            <p class="review-date">
+              <%= new Date(review.createdAt).toLocaleDateString('en-IN',
+              {year:'numeric', month:'short', day:'numeric'}) %>
+            </p>
+            <% if (currUser && review.author &&
+            currUser._id.equals(review.author._id)) { %>
+            <form
+              action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+              method="POST"
+            >
+              <button type="submit" class="btn-text-danger">
+                <i class="fa fa-trash-alt"></i> Delete review
+              </button>
+            </form>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+        <% } %> <% if (currUser) { %>
+        <div class="review-form-wrap">
+          <h4>Leave a Review</h4>
+          <form
+            action="/listings/<%= listing._id %>/reviews"
+            method="POST"
+            class="review-form"
+          >
+            <div class="rating-input">
+              <label>Your Rating</label>
+              <div class="star-selector">
+                <% for(let i = 5; i >= 1; i--) { %>
+                <input
+                  type="radio"
+                  id="star<%= i %>"
+                  name="review[rating]"
+                  value="<%= i %>"
+                  required
+                />
+                <label for="star<%= i %>">★</label>
+                <% } %>
+              </div>
+            </div>
+            <div class="form-group">
+              <textarea
+                name="review[comment]"
+                class="form-control"
+                rows="3"
+                placeholder="Share your experience..."
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </form>
+        </div>
+        <% } else { %>
+        <p class="login-prompt">
+          <a href="/login">Login</a> to leave a review.
+        </p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="show-sidebar">
+      <div class="price-card">
+        <p class="price-display">
+          ₹<%= listing.price.toLocaleString() %> <span>/night</span>
+        </p>
+        <% if (currUser) { %>
+        <button
+          class="btn btn-primary btn-full"
+          onclick="alert('Booking feature coming soon!')"
+        >
+          <i class="fa fa-calendar-check"></i> Book Now
+        </button>
+        <% } else { %>
+        <a href="/login" class="btn btn-primary btn-full">Login to Book</a>
+        <% } %>
+        <ul class="price-details">
+          <li><span>Rooms available</span><span><%= listing.rooms %></span></li>
+          <li><span>Category</span><span><%= listing.category %></span></li>
+          <li>
+            <span>Reviews</span><span><%= listing.reviews.length %></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-link-wrap">
+    <a href="/listings" class="btn btn-ghost">
+      <i class="fa fa-arrow-left"></i> Back to all listings
+    </a>
+  </div>
+</div>

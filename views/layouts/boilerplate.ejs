@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StayPoint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../includes/navbar.ejs') %>
+
+    <div class="flash-container">
+      <% if (success && success.length) { %>
+      <div class="flash flash-success">
+        <i class="fa fa-check-circle"></i> <%= success %>
+        <button class="flash-close" onclick="this.parentElement.remove()">
+          ×
+        </button>
+      </div>
+      <% } %> <% if (error && error.length) { %>
+      <div class="flash flash-error">
+        <i class="fa fa-exclamation-circle"></i> <%= error %>
+        <button class="flash-close" onclick="this.parentElement.remove()">
+          ×
+        </button>
+      </div>
+      <% } %>
+    </div>
+
+    <main><%- body %></main>
+
+    <%- include('../includes/footer.ejs') %>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

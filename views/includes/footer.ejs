@@ -1,0 +1,18 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-icon">⬡</span>
+      <span>Stay<strong>Point</strong></span>
+    </div>
+    <p class="footer-tagline">Find your perfect stay, anywhere in the world.</p>
+    <div class="footer-links">
+      <a href="/listings">Browse Rooms</a>
+      <% if (currUser) { %>
+        <a href="/listings/new">List a Room</a>
+      <% } else { %>
+        <a href="/signup">Become a Host</a>
+      <% } %>
+    </div>
+    <p class="footer-copy">&copy; <%= new Date().getFullYear() %> StayPoint. Built with ❤️</p>
+  </div>
+</footer>

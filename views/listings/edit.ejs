@@ -1,0 +1,82 @@
+
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <h2><i class="fa fa-edit"></i> Edit Listing</h2>
+      <p>Update your room details</p>
+    </div>
+
+    <form action="/listings/${listing._id}?_method=PUT" method="POST" class="listing-form">
+      <div class="form-grid">
+        <div class="form-group span-2">
+          <label for="title">Listing Title *</label>
+          <input type="text" id="title" name="listing[title]" class="form-control"
+            value="${listing.title}" required />
+        </div>
+
+        <div class="form-group span-2">
+          <label for="description">Description</label>
+          <textarea id="description" name="listing[description]" class="form-control" rows="4">${listing.description || ''}</textarea>
+        </div>
+
+        <div class="form-group span-2">
+          <label for="image">Image URL</label>
+          <input type="url" id="image" name="listing[image]" class="form-control"
+            value="${listing.image}" />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Price per Night (₹) *</label>
+          <input type="number" id="price" name="listing[price]" class="form-control"
+            value="${listing.price}" min="1" required />
+        </div>
+
+        <div class="form-group">
+          <label for="rooms">Number of Rooms</label>
+          <input type="number" id="rooms" name="listing[rooms]" class="form-control"
+            value="${listing.rooms || 1}" min="1" />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <select id="category" name="listing[category]" class="form-control" required>
+            <option value="Apartment" ${listing.category === 'Apartment' ? 'selected' : ''}>Apartment</option>
+            <option value="House" ${listing.category === 'House' ? 'selected' : ''}>House</option>
+            <option value="Villa" ${listing.category === 'Villa' ? 'selected' : ''}>Villa</option>
+            <option value="Cabin" ${listing.category === 'Cabin' ? 'selected' : ''}>Cabin</option>
+            <option value="Studio" ${listing.category === 'Studio' ? 'selected' : ''}>Studio</option>
+            <option value="Hostel" ${listing.category === 'Hostel' ? 'selected' : ''}>Hostel</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="location">City / Area *</label>
+          <input type="text" id="location" name="listing[location]" class="form-control"
+            value="${listing.location}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country *</label>
+          <input type="text" id="country" name="listing[country]" class="form-control"
+            value="${listing.country}" required />
+        </div>
+
+        <div class="form-group span-2">
+          <label for="amenities">Amenities</label>
+          <input type="text" id="amenities" name="listing[amenities]" class="form-control"
+            value="${listing.amenities ? listing.amenities.join(', ') : ''}"
+            placeholder="WiFi, AC, Parking (comma separated)" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="/listings/${listing._id}" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-save"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
