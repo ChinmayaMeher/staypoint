@@ -1,42 +1,450 @@
-<div class="auth-page">
-  <div class="auth-card">
-    <div class="auth-header">
-      <div class="auth-brand">⬡ StayPoint</div>
-      <h2>Welcome Back</h2>
-      <p>Sign in to your account</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — StayPoint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --rust: #c0622b;
+        --rust-d: #9e4e20;
+        --rust-l: #e8875a;
+        --cream: #faf6f1;
+        --warm: #f2eae0;
+        --brown: #3a2318;
+        --muted: #8c7b70;
+        --border: #e0d4c8;
+        --shadow: rgba(58, 35, 24, 0.12);
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      /* ── background texture ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 80% 60% at 20% 10%,
+            rgba(192, 98, 43, 0.08) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 80% at 80% 90%,
+            rgba(192, 98, 43, 0.06) 0%,
+            transparent 60%
+          );
+        pointer-events: none;
+      }
+
+      /* ── card ── */
+      .card {
+        width: min(460px, 94vw);
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 8px 40px var(--shadow), 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── header banner ── */
+      .card-header {
+        background: linear-gradient(
+          145deg,
+          #3a2318 0%,
+          #7a3a1e 55%,
+          #c0622b 100%
+        );
+        padding: 38px 40px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .card-header::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        top: -60px;
+        right: -60px;
+      }
+      .card-header::before {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        bottom: -40px;
+        left: -30px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .brand-icon {
+        width: 28px;
+        height: 28px;
+        border: 1.5px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+      }
+      .brand-icon i {
+        color: #fff;
+        font-size: 12px;
+      }
+      .brand-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.5px;
+      }
+
+      .card-header h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 34px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.1;
+      }
+      .card-header p {
+        margin-top: 6px;
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.65);
+        font-weight: 300;
+      }
+
+      /* ── body ── */
+      .card-body {
+        padding: 32px 40px 36px;
+      }
+
+      /* flash messages */
+      .flash {
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 13px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .flash.success {
+        background: #f0faf3;
+        color: #1e7b3e;
+        border: 1px solid #b6e8c5;
+      }
+      .flash.error {
+        background: #fff4f2;
+        color: #c0301a;
+        border: 1px solid #f5c2ba;
+      }
+
+      /* google btn */
+      .btn-google {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 13px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14.5px;
+        font-weight: 500;
+        color: var(--brown);
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        text-decoration: none;
+      }
+      .btn-google:hover {
+        border-color: #bbb;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+      }
+      .btn-google img {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* divider */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .divider span {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 400;
+        white-space: nowrap;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* form */
+      .field {
+        margin-bottom: 18px;
+      }
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-wrap i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 14px;
+        pointer-events: none;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 14px 12px 40px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14.5px;
+        color: var(--brown);
+        background: var(--cream);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      }
+      input:focus {
+        border-color: var(--rust);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(192, 98, 43, 0.1);
+      }
+      input::placeholder {
+        color: #bfb3aa;
+      }
+
+      /* eye toggle */
+      .eye-toggle {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 14px;
+        padding: 2px;
+      }
+
+      /* submit */
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--rust) 0%, var(--rust-d) 100%);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 14px rgba(192, 98, 43, 0.3);
+        margin-top: 6px;
+      }
+      .btn-submit:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(192, 98, 43, 0.4);
+      }
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      /* footer link */
+      .card-footer {
+        text-align: center;
+        margin-top: 24px;
+        font-size: 13.5px;
+        color: var(--muted);
+      }
+      .card-footer a {
+        color: var(--rust);
+        font-weight: 500;
+        text-decoration: none;
+      }
+      .card-footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <!-- Header -->
+      <div class="card-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fa-regular fa-compass"></i></div>
+          <span class="brand-name">StayPoint</span>
+        </div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to your account</p>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body">
+        <!-- Flash messages -->
+        <% if (success && success.length) { %>
+        <div class="flash success">
+          <i class="fa-solid fa-circle-check"></i> <%= success[0] %>
+        </div>
+        <% } %> <% if (error && error.length) { %>
+        <div class="flash error">
+          <i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %>
+        </div>
+        <% } %>
+
+        <!-- Google (optional — remove if not configured) -->
+        <%# Uncomment below if you add Google OAuth later %> <%#
+        <a href="/auth/google" class="btn-google">
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+          />
+          Continue with Google
+        </a>
+        <div class="divider"><span>or</span></div>
+        %>
+
+        <!-- Login Form -->
+        <form action="/login" method="POST" novalidate>
+          <div class="field">
+            <label for="username">Username</label>
+            <div class="input-wrap">
+              <i class="fa-regular fa-user"></i>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Your username"
+                required
+                autocomplete="username"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Your password"
+                required
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="eye-toggle"
+                onclick="togglePwd(this)"
+                aria-label="Toggle password"
+              >
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            Sign In
+          </button>
+        </form>
+
+        <div class="card-footer">
+          Don't have an account? <a href="/signup">Sign up free</a>
+        </div>
+      </div>
     </div>
 
-    <form action="/login" method="POST" class="auth-form">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          class="form-control"
-          placeholder="Your username"
-          required
-          autofocus
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="Your password"
-          required
-        />
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
-    </form>
-
-    <p class="auth-switch">
-      Don't have an account? <a href="/signup">Sign up free</a>
-    </p>
-  </div>
-</div>
+    <script>
+      function togglePwd(btn) {
+        const input = btn.closest(".input-wrap").querySelector("input");
+        const icon = btn.querySelector("i");
+        if (input.type === "password") {
+          input.type = "text";
+          icon.className = "fa-regular fa-eye-slash";
+        } else {
+          input.type = "password";
+          icon.className = "fa-regular fa-eye";
+        }
+      }
+    </script>
+  </body>
+</html>

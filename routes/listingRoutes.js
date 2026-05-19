@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listing.js");
 
-// Middleware to check if user is logged in
+// ✅ Middleware 1 — Check if logged in
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
+    req.session.returnTo = req.originalUrl;
     req.flash("error", "You must be logged in to do that!");
     return res.redirect("/login");
   }
   next();
 };
 
-// Middleware to check listing ownership
+// ✅ Middleware 2 — ADD THIS HERE — Check if owner
 const isOwner = async (req, res, next) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);

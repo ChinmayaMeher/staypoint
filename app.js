@@ -18,13 +18,11 @@ const listingRoutes = require("./routes/listingRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const userRoutes = require("./routes/userRoutes");
 
+// Hardcoded fallback so it works even without .env
 const MONGO_URL =
-  process.env.MONGO_URL || "mongodb://localhost:27017/staypoint";
+  process.env.MONGO_URL || "mongodb://127.0.0.1:27017/staypoint";
+const SECRET = process.env.SECRET || "staypoint_secret_key_123";
 const PORT = process.env.PORT || 8080;
-const ejsLayouts = require("express-ejs-layouts");
-
-app.use(ejsLayouts);
-app.set("layout", "layouts/boilerplate"); // points to views/layouts/boilerplate.ejs
 
 // Connect to DB
 main()
@@ -45,18 +43,21 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session config — must be defined BEFORE app.use(session(...))
+// Session
 const sessionOptions = {
-  secret: process.env.SECRET || "fallbacksecret",
+  store: MongoStore.create({
+    mongoUrl: MONGO_URL,
+    touchAfter: 24 * 3600,
+  }),
+  secret: SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   },
 };
-
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -66,14 +67,6 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-// Locals — AFTER passport so req.user and req.flash() are ready
-app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currUser = req.user || null;
-  next();
-});
 
 // Locals for all views
 app.use((req, res, next) => {
@@ -99,10 +92,11 @@ app.use((req, res) => {
 
 // Error Handler
 app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
   const { status = 500, message = "Something went wrong!" } = err;
   res.status(status).render("error.ejs", { message, error: err });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 StayPoint server running on http://localhost:${PORT}`);
+  console.log(`🚀 StayPoint server running on ${PORT}`);
 });

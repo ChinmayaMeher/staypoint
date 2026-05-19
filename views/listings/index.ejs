@@ -1,125 +1,170 @@
-<div class="hero-section">
-  <div class="hero-content">
-    <h1 class="hero-title">Find Your Perfect Stay</h1>
-    <p class="hero-subtitle">
-      Thousands of rooms, apartments and villas waiting for you
-    </p>
-    <form class="search-form" action="/listings" method="GET">
-      <input
-        type="text"
-        name="search"
-        placeholder="Search by city, country or room name..."
-        value="<%= typeof search !== 'undefined' && search ? search : '' %>"
-        class="search-input"
-      />
-      <button type="submit" class="btn btn-primary search-btn">
-        <i class="fa fa-search"></i> Search
-      </button>
-    </form>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StayPoint - All Listings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <%- include('../includes/navbar.ejs') %>
 
-<div class="listings-page">
-  <div class="category-bar">
-    <a
-      href="/listings"
-      class="category-pill <%= typeof category === 'undefined' || !category ? 'active' : '' %>"
-    >
-      <i class="fa fa-th"></i> All
-    </a>
-    <a
-      href="/listings?category=Apartment"
-      class="category-pill <%= typeof category === 'Apartment' || !category ? 'active' : '' %>"
-    >
-      <i class="fa fa-building"></i> Apartment
-    </a>
-    <a
-      href="/listings?category=House"
-      class="category-pill <%= typeof category === 'House' || !category ? 'active' : '' %>"
-    >
-      <i class="fa fa-home"></i> House
-    </a>
-    <a
-      href="/listings?category=Villa"
-      class="category-pill <%= typeof category === 'Villa' || !category ? 'active' : '' %>"
-    >
-      <i class="fa fa-star"></i> Villa
-    </a>
-    <a
-      href="/listings?category=Cabin"
-      class="category-pill <%= typeof category === 'Cabin' || !category ? 'active' : '' %>"
-    >
-      <i class="fa fa-star"></i> Cabin
-    </a>
-    <a
-      href="/listings?category=Studio"
-      class="category-pill <%= typeof category === 'Studio' || !category ? 'active' : '' %>"
-    >
-      >
-      <i class="fa fa-camera"></i> Studio
-    </a>
-    <a
-      href="/listings?category=Hostel"
-      class="category-pill <%= typeof category === 'Hostel' || !category ? 'active' : '' %>"
-    >
-      >
-      <i class="fa fa-bed"></i> Hostel
-    </a>
-  </div>
-
-  <div class="listings-container">
-    <div class="listings-header">
-      <h2 class="section-title">
-        <%= typeof allListing !== 'undefined' ? allListing.length : 0 %> <%=
-        typeof category !== 'undefined' && category ? category : '' %> Stays
-        Available
-      </h2>
-      <% if (typeof locals.currUser !== 'undefined' && locals.currUser) { %>
-      <a href="/listings/new" class="btn btn-primary">+ Add New Listing</a>
+    <div class="flash-container">
+      <% if (success && success.length) { %>
+      <div class="flash flash-success">
+        <i class="fa fa-check-circle"></i> <%= success %>
+        <button class="flash-close" onclick="this.parentElement.remove()">
+          ×
+        </button>
+      </div>
+      <% } %> <% if (error && error.length) { %>
+      <div class="flash flash-error">
+        <i class="fa fa-exclamation-circle"></i> <%= error %>
+        <button class="flash-close" onclick="this.parentElement.remove()">
+          ×
+        </button>
+      </div>
       <% } %>
     </div>
 
-    <% if (allListing.length === 0) { %>
-    <div class="empty-state">
-      <i class="fa fa-search fa-3x"></i>
-      <h3>No listings found</h3>
-      <p>
-        Try adjusting your search or <a href="/listings">browse all rooms</a>.
-      </p>
-    </div>
-    <% } else { %>
-    <div class="listings-grid">
-      <% for (let listing of allListing) { %>
-      <a href="/listings/<%= listing._id %>" class="listing-card">
-        <div class="card-image-wrap">
-          <img
-            src="<%= listing.image %>"
-            alt="<%= listing.title %>"
-            class="card-image"
-            loading="lazy"
-          />
-          <span class="card-category"><%= listing.category %></span>
-        </div>
-        <div class="card-body">
-          <h3 class="card-title"><%= listing.title %></h3>
-          <p class="card-location">
-            <i class="fa fa-map-marker-alt"></i>
-            <%= listing.location %>, <%= listing.country %>
+    <main>
+      <div class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-title">Find Your Perfect Stay</h1>
+          <p class="hero-subtitle">
+            Thousands of rooms, apartments and villas waiting for you
           </p>
-          <div class="card-footer">
-            <span class="card-price"
-              >₹<%= listing.price.toLocaleString() %>
-              <small>/night</small></span
-            >
-            <span class="card-rooms"
-              ><i class="fa fa-door-open"></i> <%= listing.rooms %> room<%=
-              listing.rooms > 1 ? 's' : '' %></span
-            >
-          </div>
+          <form class="search-form" action="/listings" method="GET">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search by city, country or room name..."
+              value="<%= typeof search !== 'undefined' && search ? search : '' %>"
+              class="search-input"
+            />
+            <button type="submit" class="btn btn-primary search-btn">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </form>
         </div>
-      </a>
-      <% } %>
-    </div>
-    <% } %>
-  </div>
-</div>
+      </div>
+
+      <div class="listings-page">
+        <div class="category-bar">
+          <a
+            href="/listings"
+            class="category-pill <%= typeof category === 'undefined' || !category ? 'active' : '' %>"
+          >
+            <i class="fa fa-th"></i> All
+          </a>
+          <a
+            href="/listings?category=Apartment"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'Apartment' ? 'active' : '' %>"
+          >
+            <i class="fa fa-building"></i> Apartment
+          </a>
+          <a
+            href="/listings?category=House"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'House' ? 'active' : '' %>"
+          >
+            <i class="fa fa-home"></i> House
+          </a>
+          <a
+            href="/listings?category=Villa"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'Villa' ? 'active' : '' %>"
+          >
+            <i class="fa fa-star"></i> Villa
+          </a>
+          <a
+            href="/listings?category=Cabin"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'Cabin' ? 'active' : '' %>"
+          >
+            <i class="fa fa-tree"></i> Cabin
+          </a>
+          <a
+            href="/listings?category=Studio"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'Studio' ? 'active' : '' %>"
+          >
+            <i class="fa fa-camera"></i> Studio
+          </a>
+          <a
+            href="/listings?category=Hostel"
+            class="category-pill <%= typeof category !== 'undefined' && category === 'Hostel' ? 'active' : '' %>"
+          >
+            <i class="fa fa-bed"></i> Hostel
+          </a>
+        </div>
+
+        <div class="listings-container">
+          <div class="listings-header">
+            <h2 class="section-title">
+              <%= allListing.length %> <%= typeof category !== 'undefined' &&
+              category ? category : '' %> Stays Available
+            </h2>
+            <% if (currUser) { %>
+            <a href="/listings/new" class="btn btn-primary"
+              >+ Add New Listing</a
+            >
+            <% } %>
+          </div>
+
+          <% if (allListing.length === 0) { %>
+          <div class="empty-state">
+            <i class="fa fa-search fa-3x"></i>
+            <h3>No listings found</h3>
+            <p>
+              Try adjusting your search or
+              <a href="/listings">browse all rooms</a>.
+            </p>
+          </div>
+          <% } else { %>
+          <div class="listings-grid">
+            <% for (let listing of allListing) { %>
+            <a href="/listings/<%= listing._id %>" class="listing-card">
+              <div class="card-image-wrap">
+                <img
+                  src="<%= listing.image %>"
+                  alt="<%= listing.title %>"
+                  class="card-image"
+                  loading="lazy"
+                />
+                <span class="card-category"><%= listing.category %></span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title"><%= listing.title %></h3>
+                <p class="card-location">
+                  <i class="fa fa-map-marker-alt"></i>
+                  <%= listing.location %>, <%= listing.country %>
+                </p>
+                <div class="card-footer">
+                  <span class="card-price"
+                    >₹<%= listing.price.toLocaleString() %>
+                    <small>/night</small></span
+                  >
+                  <span class="card-rooms"
+                    ><i class="fa fa-door-open"></i> <%= listing.rooms %>
+                    room<%= listing.rooms > 1 ? 's' : '' %></span
+                  >
+                </div>
+              </div>
+            </a>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </main>
+
+    <%- include('../includes/footer.ejs') %>
+    <script src="/js/script.js"></script>
+  </body>
+</html>
