@@ -31,6 +31,7 @@ router.post("/signup", async (req, res, next) => {
       return res.redirect("/listings");
     });
   } catch (err) {
+    console.error("Signup Error:", err);
     req.flash("error", err.message);
     return res.redirect("/signup");
   }
@@ -47,6 +48,7 @@ router.post(
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true, // uses passport-local-mongoose's error message
+    keepSessionInfo: true,
   }),
   (req, res) => {
     req.flash("success", `Welcome back, ${req.user.username}!`);

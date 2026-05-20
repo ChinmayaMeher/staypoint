@@ -7,7 +7,7 @@
   <div class="navbar-links">
     <% if (currUser) { %>
       <span class="nav-user">
-        <i class="fa fa-user-circle"></i> <%= currUser.name %>
+        <i class="fa fa-user-circle"></i> <%= currUser.username %>
       </span>
       <a href="/listings/new" class="btn btn-outline">+ List Your Room</a>
       <a href="/logout" class="btn btn-ghost">Logout</a>
@@ -23,7 +23,7 @@
 
   <div class="mobile-menu" id="mobileMenu">
     <% if (currUser) { %>
-      <span class="nav-user"><i class="fa fa-user-circle"></i> <%= currUser.name %></span>
+      <span class="nav-user"><i class="fa fa-user-circle"></i> <%= currUser.username %></span>
       <a href="/listings/new">+ List Your Room</a>
       <a href="/logout">Logout</a>
     <% } else { %>

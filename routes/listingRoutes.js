@@ -125,3 +125,29 @@ router.delete("/:id", isLoggedIn, isOwner, async (req, res) => {
 });
 
 module.exports = router;
+
+// POST /bookings  — handle booking submission
+router.post("/bookings", async (req, res) => {
+  try {
+    const {
+      checkin,
+      checkout,
+      adults,
+      children,
+      infants,
+      nights,
+      total,
+      listingId,
+    } = req.body;
+
+    // TODO: save to DB using your Booking model (create models/booking.js)
+    // e.g. await Booking.create({ checkin, checkout, adults, children, infants, nights, total, listing: listingId });
+
+    const bookingRef =
+      "OVS-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    res.json({ success: true, bookingRef });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Booking failed" });
+  }
+});
