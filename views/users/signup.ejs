@@ -460,6 +460,7 @@
 
         <!-- Signup Form -->
         <form action="/signup" method="POST" novalidate id="signupForm">
+          <input type="hidden" name="_token" value="<%= csrfToken %>" />
           <div class="row-2">
             <div class="field">
               <label for="username">Username</label>
@@ -535,6 +536,8 @@
       </div>
     </div>
 
+    <%- include('../includes/chatbot.ejs') %>
+    <script src="/js/script.js"></script>
     <script>
       function togglePwd(id) {
         const input = document.getElementById(id);

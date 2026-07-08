@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ticket - <%= booking.bookingRef %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #c8622a;
+        --text-dark: #333;
+        --text-light: #666;
+        --bg-light: #f9f9f9;
+        --danger-color: #d9534f;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background-color: #e0e5ec;
+        margin: 0;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .ticket-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      .ticket {
+        background: #fff;
+        width: 800px;
+        max-width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        display: flex;
+        overflow: hidden;
+        position: relative;
+      }
+      .ticket-left {
+        padding: 40px;
+        flex: 1;
+        position: relative;
+        border-right: 2px dashed #ddd;
+      }
+      .ticket-right {
+        padding: 40px;
+        width: 250px;
+        background: var(--bg-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .ticket-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+      }
+      .brand {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0;
+      }
+      .ref-badge {
+        background: rgba(200, 98, 42, 0.1);
+        color: var(--primary-color);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .listing-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        color: var(--text-dark);
+        margin: 0 0 10px 0;
+      }
+      .location {
+        color: var(--text-light);
+        margin-bottom: 30px;
+        font-size: 15px;
+      }
+      .location i {
+        color: var(--primary-color);
+        margin-right: 5px;
+      }
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+      .detail-box {
+        background: var(--bg-light);
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .detail-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--text-light);
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+      }
+      .detail-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .guest-info {
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+      .guest-info h4 {
+        margin: 0 0 10px 0;
+        color: var(--text-dark);
+      }
+      .guest-info p {
+        margin: 0;
+        color: var(--text-light);
+        font-size: 15px;
+      }
+      .qr-code {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+      }
+      .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .status-confirmed {
+        background: #e6f4ea;
+        color: #1e8e3e;
+      }
+      .status-pending {
+        background: #fef7e0;
+        color: #f29900;
+      }
+      .status-cancelled {
+        background: #fce8e6;
+        color: #d93025;
+      }
+      .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 100px;
+        font-weight: 900;
+        color: rgba(217, 83, 79, 0.1);
+        pointer-events: none;
+        z-index: 10;
+        white-space: nowrap;
+      }
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #a65020;
+      }
+      .btn-outline {
+        background: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+      }
+      .actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      
+      @media (max-width: 768px) {
+        .ticket {
+          flex-direction: column;
+        }
+        .ticket-left {
+          border-right: none;
+          border-bottom: 2px dashed #ddd;
+        }
+        .ticket-right {
+          width: 100%;
+          padding: 30px;
+        }
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ticket-wrapper">
+      <div class="actions" data-html2canvas-ignore="true">
+        <button class="btn btn-outline" onclick="window.location.href='/bookings'"><i class="fa fa-arrow-left"></i> Back to Bookings</button>
+        <button class="btn btn-primary" onclick="downloadPDF()"><i class="fa fa-download"></i> Download PDF</button>
+      </div>
+
+      <div class="ticket" id="ticket-content">
+        <% if (booking.status === 'cancelled') { %>
+          <div class="watermark">CANCELLED</div>
+        <% } %>
+        <div class="ticket-left">
+          <div class="ticket-header">
+            <h1 class="brand">StayPoint</h1>
+            <span class="ref-badge"><i class="fa fa-ticket-alt"></i> <%= booking.bookingRef %></span>
+          </div>
+
+          <h2 class="listing-title"><%= booking.listing.title %></h2>
+          <div class="location">
+            <i class="fa fa-map-marker-alt"></i> <%= booking.listing.location %>, <%= booking.listing.country %>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-box">
+              <div class="detail-label">Check-in</div>
+              <div class="detail-value"><%= new Date(booking.checkin).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></div>
+              <div class="detail-label" style="margin-top: 5px;">14:00 (2:00 PM)</div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-label">Check-out</div>
+              <div class="detail-value"><%= new Date(booking.checkout).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></div>
+              <div class="detail-label" style="margin-top: 5px;">11:00 (11:00 AM)</div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-label">Guests</div>
+              <div class="detail-value">
+                <%= booking.guests.adults %> Adults
+                <% if(booking.guests.children > 0) { %>, <%= booking.guests.children %> Children <% } %>
+              </div>
+            </div>
+            <div class="detail-box">
+              <div class="detail-label">Total Price</div>
+              <div class="detail-value">₹<%= booking.totalPrice.toLocaleString() %> (<%= booking.nights %> nights)</div>
+            </div>
+          </div>
+
+          <div class="guest-info">
+            <h4>Guest Information</h4>
+            <p><i class="fa fa-user"></i> <%= booking.guest.fullName || booking.guest.username %></p>
+            <p><i class="fa fa-envelope"></i> <%= booking.guest.email || "No email provided" %></p>
+          </div>
+        </div>
+        
+        <div class="ticket-right">
+          <% if (booking.status === 'cancelled') { %>
+            <div style="width: 150px; height: 150px; border: 2px solid #d9534f; display: flex; align-items: center; justify-content: center; color: #d9534f; font-weight: bold; margin-bottom: 20px;">
+              INVALID
+            </div>
+          <% } else { %>
+            <img src="<%= qrCode %>" alt="QR Code" class="qr-code" />
+          <% } %>
+          <span class="status-badge status-<%= booking.status %>">
+            <%= booking.status %>
+          </span>
+          <p style="margin-top: 15px; font-size: 12px; color: var(--text-light);">
+            Scan to verify booking
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function downloadPDF() {
+        const element = document.getElementById('ticket-content');
+        const opt = {
+          margin:       0,
+          filename:     'StayPoint-Ticket-<%= booking.bookingRef %>.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(element).save();
+      }
+    </script>
+  </body>
+</html>

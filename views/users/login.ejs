@@ -383,6 +383,7 @@
 
         <!-- Login Form -->
         <form action="/login" method="POST" novalidate>
+          <input type="hidden" name="_token" value="<%= csrfToken %>" />
           <div class="field">
             <label for="username">Username</label>
             <div class="input-wrap">
@@ -433,6 +434,8 @@
       </div>
     </div>
 
+    <%- include('../includes/chatbot.ejs') %>
+    <script src="/js/script.js"></script>
     <script>
       function togglePwd(btn) {
         const input = btn.closest(".input-wrap").querySelector("input");

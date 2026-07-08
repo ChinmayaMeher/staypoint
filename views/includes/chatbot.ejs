@@ -1,0 +1,249 @@
+<style>
+  .sp-chatbot-root,
+  .sp-chatbot-root * {
+    box-sizing: border-box;
+  }
+
+  .sp-chatbot-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sp-chatbot-root {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 9999;
+    font-family: "DM Sans", system-ui, sans-serif;
+    color: #1a1614;
+  }
+
+  .sp-chatbot-root .chatbot-toggle {
+    height: 48px;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 18px;
+    background: #1a1614;
+    color: #ffffff;
+    box-shadow: 0 8px 40px rgba(26, 22, 20, 0.16);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .sp-chatbot-root.open .chatbot-toggle {
+    display: none;
+  }
+
+  .sp-chatbot-root .chatbot-panel {
+    width: min(370px, calc(100vw - 28px));
+    max-height: min(620px, calc(100vh - 40px));
+    background: #ffffff;
+    border: 1px solid #e8ddd6;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(26, 22, 20, 0.16);
+    display: none;
+    overflow: hidden;
+  }
+
+  .sp-chatbot-root.open .chatbot-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sp-chatbot-root .chatbot-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px;
+    background: #1a1614;
+    color: #ffffff;
+  }
+
+  .sp-chatbot-root .chatbot-kicker {
+    font-size: 0.74rem;
+    color: #f3c7ad;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 3px;
+  }
+
+  .sp-chatbot-root .chatbot-head h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.25;
+    color: #ffffff;
+  }
+
+  .sp-chatbot-root .chatbot-close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .sp-chatbot-root .chatbot-messages {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-height: 230px;
+    max-height: 330px;
+    background: #fbf8f5;
+  }
+
+  .sp-chatbot-root .chat-msg {
+    max-width: 86%;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    white-space: pre-line;
+  }
+
+  .sp-chatbot-root .chat-msg.bot {
+    align-self: flex-start;
+    background: #ffffff;
+    border: 1px solid #e8ddd6;
+    color: #1a1614;
+  }
+
+  .sp-chatbot-root .chat-msg.user {
+    align-self: flex-end;
+    background: #c8622a;
+    color: #ffffff;
+  }
+
+  .sp-chatbot-root .chat-msg.muted {
+    color: #6b5f59;
+  }
+
+  .sp-chatbot-root .chatbot-suggestions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid #e8ddd6;
+    overflow-x: auto;
+  }
+
+  .sp-chatbot-root .chatbot-suggestions button {
+    flex: 0 0 auto;
+    border: 1px solid #e8ddd6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1a1614;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+
+  .sp-chatbot-root .chatbot-suggestions button:hover {
+    border-color: #c8622a;
+    color: #a34d1e;
+  }
+
+  .sp-chatbot-root .chatbot-form {
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    gap: 8px;
+    padding: 14px;
+    border-top: 1px solid #e8ddd6;
+    background: #ffffff;
+  }
+
+  .sp-chatbot-root .chatbot-form input[type="text"] {
+    min-width: 0;
+    border: 1px solid #e8ddd6;
+    border-radius: 8px;
+    padding: 11px 12px;
+    font: inherit;
+    color: #1a1614;
+    background: #ffffff;
+  }
+
+  .sp-chatbot-root .chatbot-form input[type="text"]:focus {
+    outline: none;
+    border-color: #c8622a;
+    box-shadow: 0 0 0 3px rgba(200, 98, 42, 0.14);
+  }
+
+  .sp-chatbot-root .chatbot-form button {
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 8px;
+    background: #c8622a;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  @media (max-width: 520px) {
+    .sp-chatbot-root {
+      right: 14px;
+      bottom: 14px;
+    }
+
+    .sp-chatbot-root .chatbot-panel {
+      max-height: calc(100vh - 28px);
+    }
+
+    .sp-chatbot-root .chatbot-messages {
+      max-height: 300px;
+    }
+  }
+</style>
+
+<section class="chatbot sp-chatbot-root" id="staypointChatbot" aria-label="StayPoint assistant">
+  <button class="chatbot-toggle" id="chatbotToggle" type="button" aria-expanded="false" aria-controls="chatbotPanel">
+    <i class="fa fa-comments"></i>
+    <span>Help</span>
+  </button>
+
+  <div class="chatbot-panel" id="chatbotPanel" aria-hidden="true">
+    <div class="chatbot-head">
+      <div>
+        <p class="chatbot-kicker">StayPoint Assistant</p>
+        <h2>Ask about your stay</h2>
+      </div>
+      <button class="chatbot-close" id="chatbotClose" type="button" aria-label="Close chat">
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="chatbot-messages" id="chatbotMessages" aria-live="polite">
+      <div class="chat-msg bot">
+        Hi, I can help with bookings, prices, cancellations, wishlists, hosting, reviews, and account questions.
+      </div>
+    </div>
+
+    <div class="chatbot-suggestions" id="chatbotSuggestions">
+      <button type="button">How do I book?</button>
+      <button type="button">What fees are included?</button>
+      <button type="button">How can I become a host?</button>
+    </div>
+
+    <form class="chatbot-form" id="chatbotForm">
+      <input type="hidden" id="chatbotCsrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>" />
+      <label class="sr-only sp-chatbot-sr" for="chatbotInput">Ask StayPoint</label>
+      <input id="chatbotInput" name="message" type="text" maxlength="500" placeholder="Ask anything about StayPoint..." autocomplete="off" />
+      <button type="submit" aria-label="Send message">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </form>
+  </div>
+</section>

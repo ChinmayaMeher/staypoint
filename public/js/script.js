@@ -34,32 +34,64 @@ if (imgInput) {
 }
 
 // ===== BOOKING MODAL =====
-const BM_PRICE =
-  parseInt(document.getElementById("bookingOverlay").dataset.price) || 220;
+function getBookingOverlay() {
+  return document.getElementById("bookingOverlay");
+}
+function getBmPrice() {
+  const overlay = getBookingOverlay();
+  return overlay ? parseInt(overlay.dataset.price) || 220 : 220;
+}
+function getCsrfToken() {
+  const el = document.getElementById("chatbotCsrf");
+  return el ? el.value : "";
+}
 
 function openBookingModal() {
-  document.getElementById("bookingOverlay").classList.add("open");
-  bmShowPanel(1);
-  document.getElementById("bmSuccess").classList.remove("show");
-  document.getElementById("bmSteps").style.display = "";
-  document.getElementById("bmTitle").textContent = "Book your stay";
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("bmCheckin").min = today;
-  document.getElementById("bmCheckout").min = today;
+  try {
+    const overlay = getBookingOverlay();
+    if (!overlay) {
+      alert("Booking overlay not found");
+      return;
+    }
+    overlay.classList.add("open");
+    bmShowPanel(1);
+    
+    const bmSuccess = document.getElementById("bmSuccess");
+    if (bmSuccess) bmSuccess.classList.remove("show");
+    
+    const bmSteps = document.getElementById("bmSteps");
+    if (bmSteps) bmSteps.style.display = "";
+    
+    const bmTitle = document.getElementById("bmTitle");
+    if (bmTitle) bmTitle.textContent = "Book your stay";
+    
+    const today = new Date().toISOString().split("T")[0];
+    const bmCheckin = document.getElementById("bmCheckin");
+    if (bmCheckin) bmCheckin.min = today;
+    
+    const bmCheckout = document.getElementById("bmCheckout");
+    if (bmCheckout) bmCheckout.min = today;
+  } catch(e) {
+    alert("Error opening modal: " + e.message);
+  }
 }
 
 function closeBookingModal() {
-  document.getElementById("bookingOverlay").classList.remove("open");
+  const overlay = getBookingOverlay();
+  if (!overlay) return;
+  overlay.classList.remove("open");
 }
 
 // close modal if clicking outside
-document
-  .getElementById("bookingOverlay")
-  .addEventListener("click", function (e) {
-    if (e.target === this) closeBookingModal();
-  });
+document.addEventListener("click", function (e) {
+  const overlay = getBookingOverlay();
+  if (overlay && overlay.classList.contains("open") && e.target === overlay) {
+    closeBookingModal();
+  }
+});
 
 function bmShowPanel(num) {
+  if (!getBookingOverlay()) return;
   [1, 2, 3].forEach((i) => {
     document
       .getElementById("bmPanel" + i)
@@ -72,6 +104,7 @@ function bmShowPanel(num) {
 }
 
 function bmGetNights() {
+  if (!getBookingOverlay()) return 0;
   const ci = document.getElementById("bmCheckin").value;
   const co = document.getElementById("bmCheckout").value;
   if (!ci || !co) return 0;
@@ -80,6 +113,7 @@ function bmGetNights() {
 }
 
 function bmUpdateDates() {
+  if (!getBookingOverlay()) return;
   const nights = bmGetNights();
   const ci = document.getElementById("bmCheckin").value;
   const co = document.getElementById("bmCheckout").value;
@@ -95,9 +129,9 @@ function bmUpdateDates() {
   if (nights > 0) {
     document.getElementById("bmNightsLabel").textContent = `${nights} night${
       nights > 1 ? "s" : ""
-    } × ₹${BM_PRICE}`;
+    } × ₹${getBmPrice()}`;
     document.getElementById("bmNightsPrice").textContent = `₹${(
-      nights * BM_PRICE
+      nights * getBmPrice()
     ).toLocaleString("en-IN")}`;
     document.getElementById("bmNextTo2").disabled = false;
   } else {
@@ -114,6 +148,7 @@ const bmLimits = {
   infant: { min: 0, max: 4 },
 };
 function bmCount(type, dir) {
+  if (!getBookingOverlay()) return;
   const el = document.getElementById(
     "bm" + type.charAt(0).toUpperCase() + type.slice(1) + "Count"
   );
@@ -139,6 +174,7 @@ function bmFmtDate(s) {
 }
 
 function bmBuildSummary() {
+  if (!getBookingOverlay()) return;
   const nights = bmGetNights();
   const adults = parseInt(document.getElementById("bmAdultCount").textContent);
   const children = parseInt(
@@ -150,26 +186,23 @@ function bmBuildSummary() {
   const base = nights * BM_PRICE;
   const tax = Math.round(base * 0.12);
   const total = base + tax;
-  const ci = document.getElementById("bmCheckin").value;
-  const co = document.getElementById("bmCheckout").value;
 
-  const gp = [`${adults} adult${adults > 1 ? "s" : ""}`];
-  if (children) gp.push(`${children} child${children > 1 ? "ren" : ""}`);
-  if (infants) gp.push(`${infants} infant${infants > 1 ? "s" : ""}`);
-
-  document.getElementById("bmSummaryBox").innerHTML = `
-    <div class="bm-sum-item"><div class="bm-sum-key">Check-in</div><div class="bm-sum-val">${bmFmtDate(
+  const box = document.getElementById("bmSummaryBox");
+  box.innerHTML = `
+    <div class="bm-sum-row"><span>Check-in</span><strong>${bmFmtDate(
       ci
-    )}</div></div>
-    <div class="bm-sum-item"><div class="bm-sum-key">Check-out</div><div class="bm-sum-val">${bmFmtDate(
+    )}</strong></div>
+    <div class="bm-sum-row"><span>Check-out</span><strong>${bmFmtDate(
       co
-    )}</div></div>
-    <div class="bm-sum-item"><div class="bm-sum-key">Guests</div><div class="bm-sum-val">${gp.join(
-      ", "
-    )}</div></div>
+    )}</strong></div>
+    <div class="bm-sum-row"><span>Guests</span><strong>${adults + children} guest${
+    adults + children > 1 ? "s" : ""
+  }${infants > 0 ? `, ${infants} infant${infants > 1 ? "s" : ""}` : ""}</strong></div>
   `;
-  document.getElementById("bmBreakdown").innerHTML = `
-    <div class="bm-price-row"><span>₹${BM_PRICE} × ${nights} night${
+
+  const bk = document.getElementById("bmBreakdown");
+  bk.innerHTML = `
+    <div class="bm-price-row"><span>₹${getBmPrice()} × ${nights} night${
     nights > 1 ? "s" : ""
   }</span><span>₹${base.toLocaleString("en-IN")}</span></div>
     <div class="bm-price-row"><span>Taxes & fees (12%)</span><span>₹${tax.toLocaleString(
@@ -183,6 +216,7 @@ function bmBuildSummary() {
 }
 
 async function bmSubmit() {
+  if (!getBookingOverlay()) return;
   const btn = document.getElementById("bmConfirmBtn");
   const status = document.getElementById("bmConfirmStatus");
   btn.disabled = true;
@@ -190,7 +224,7 @@ async function bmSubmit() {
   status.textContent = "";
 
   const nights = bmGetNights();
-  const base = nights * BM_PRICE;
+  const base = nights * getBmPrice();
   const tax = Math.round(base * 0.12);
 
   const payload = {
@@ -200,32 +234,36 @@ async function bmSubmit() {
     children: parseInt(document.getElementById("bmChildCount").textContent),
     infants: parseInt(document.getElementById("bmInfantCount").textContent),
     nights,
-    pricePerNight: BM_PRICE,
+    pricePerNight: getBmPrice(),
     subtotal: base,
     tax,
     total: base + tax,
-    listingId:
-      document.getElementById("bookingOverlay").dataset.listingId || "",
+    listingId: getBookingOverlay().dataset.listingId || "",
   };
 
   try {
-    const res = await fetch("/bookings", {
+    const res = await fetch(`/bookings/listings/${payload.listingId}/book`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-csrf-token": getCsrfToken() },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error("Server error");
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || errData.message || "Server error");
+    }
     const data = await res.json();
-    showBookingSuccess(data.bookingRef);
+    window.location.href = "/bookings/" + data.bookingRef;
   } catch (e) {
-    status.textContent = "Booking failed. Please try again.";
+    status.textContent = e.message || "Booking failed. Please try again.";
     status.className = "bm-status err";
     btn.disabled = false;
     btn.textContent = "✔ Confirm Booking";
+    alert("Booking Error: " + (e.message || "Booking failed. Please try again."));
   }
 }
 
 function showBookingSuccess(ref) {
+  if (!getBookingOverlay()) return;
   document.getElementById("bmSteps").style.display = "none";
   document.getElementById("bmTitle").textContent = "";
   [1, 2, 3].forEach((i) =>
@@ -237,3 +275,81 @@ function showBookingSuccess(ref) {
   document.getElementById("bmSuccess").classList.add("show");
 }
 // ===== END BOOKING MODAL =====
+
+// ===== STAYPOINT CHATBOT =====
+const chatbot = document.getElementById("staypointChatbot");
+const chatbotToggle = document.getElementById("chatbotToggle");
+const chatbotClose = document.getElementById("chatbotClose");
+const chatbotPanel = document.getElementById("chatbotPanel");
+const chatbotForm = document.getElementById("chatbotForm");
+const chatbotInput = document.getElementById("chatbotInput");
+const chatbotMessages = document.getElementById("chatbotMessages");
+const chatbotSuggestions = document.getElementById("chatbotSuggestions");
+
+function setChatbotOpen(open) {
+  if (!chatbot || !chatbotPanel || !chatbotToggle) return;
+  chatbot.classList.toggle("open", open);
+  chatbotPanel.setAttribute("aria-hidden", String(!open));
+  chatbotToggle.setAttribute("aria-expanded", String(open));
+  if (open) chatbotInput?.focus();
+}
+
+function addChatMessage(text, type = "bot") {
+  if (!chatbotMessages) return;
+  const msg = document.createElement("div");
+  msg.className = `chat-msg ${type}`;
+  msg.textContent = text;
+  chatbotMessages.appendChild(msg);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+async function askStayPoint(message) {
+  addChatMessage(message, "user");
+  const thinking = document.createElement("div");
+  thinking.className = "chat-msg bot muted";
+  thinking.textContent = "Checking StayPoint details...";
+  chatbotMessages.appendChild(thinking);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
+      body: JSON.stringify({ message }),
+    });
+    const data = await res.json();
+    thinking.remove();
+    addChatMessage(data.reply || "I could not find an answer for that yet.");
+  } catch (err) {
+    thinking.remove();
+    addChatMessage("I could not connect right now. Please try again in a moment.");
+  }
+}
+
+if (chatbotToggle) {
+  chatbotToggle.addEventListener("click", () => {
+    setChatbotOpen(!chatbot?.classList.contains("open"));
+  });
+}
+
+if (chatbotClose) {
+  chatbotClose.addEventListener("click", () => setChatbotOpen(false));
+}
+
+if (chatbotForm) {
+  chatbotForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const message = chatbotInput.value.trim();
+    if (!message) return;
+    chatbotInput.value = "";
+    await askStayPoint(message);
+  });
+}
+
+if (chatbotSuggestions) {
+  chatbotSuggestions.addEventListener("click", (e) => {
+    if (e.target.tagName !== "BUTTON") return;
+    setChatbotOpen(true);
+    askStayPoint(e.target.textContent);
+  });
+}

@@ -9,7 +9,18 @@
       <span class="nav-user">
         <i class="fa fa-user-circle"></i> <%= currUser.username %>
       </span>
-      <a href="/listings/new" class="btn btn-outline">+ List Your Room</a>
+      <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
+        <a href="/listings/new" class="btn btn-outline">+ List Your Room</a>
+        <form action="/profile/switch-role" method="POST" style="display:inline;">
+          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <button type="submit" class="btn btn-ghost">Switch to Guest</button>
+        </form>
+      <% } else { %>
+        <form action="/profile/switch-role" method="POST" style="display:inline;">
+          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <button type="submit" class="btn btn-outline">Become a Host</button>
+        </form>
+      <% } %>
       <a href="/logout" class="btn btn-ghost">Logout</a>
     <% } else { %>
       <a href="/login" class="nav-link">Login</a>
@@ -24,7 +35,18 @@
   <div class="mobile-menu" id="mobileMenu">
     <% if (currUser) { %>
       <span class="nav-user"><i class="fa fa-user-circle"></i> <%= currUser.username %></span>
-      <a href="/listings/new">+ List Your Room</a>
+      <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
+        <a href="/listings/new">+ List Your Room</a>
+        <form action="/profile/switch-role" method="POST" style="margin: 10px 0;">
+          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <button type="submit" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0;">Switch to Guest</button>
+        </form>
+      <% } else { %>
+        <form action="/profile/switch-role" method="POST" style="margin: 10px 0;">
+          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <button type="submit" style="background:none; border:none; color:inherit; font:inherit; cursor:pointer; padding:0;">Become a Host</button>
+        </form>
+      <% } %>
       <a href="/logout">Logout</a>
     <% } else { %>
       <a href="/login">Login</a>

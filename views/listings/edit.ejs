@@ -35,7 +35,8 @@
           <p>Update your room details</p>
         </div>
 
-        <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="listing-form">
+        <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" class="listing-form" enctype="multipart/form-data">
+          <input type="hidden" name="_token" value="<%= csrfToken %>" />
           <div class="form-grid">
             <div class="form-group span-2">
               <label for="title">Listing Title *</label>
@@ -49,9 +50,25 @@
             </div>
 
             <div class="form-group span-2">
-              <label for="image">Image URL</label>
-              <input type="url" id="image" name="listing[image]" class="form-control"
-                value="<%= listing.image %>" />
+              <label>Listing Images</label>
+              <div class="image-upload-options" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px; padding: 15px; border: 1px dashed var(--border-color, #ccc); border-radius: 8px; background: var(--light-bg, #f8f9fa);">
+                  <label for="images" style="display: block; margin-bottom: 8px;"><strong><i class="fa fa-upload"></i> Upload New Images</strong></label>
+                  <input type="file" id="images" name="images" class="form-control" accept="image/*" multiple />
+                  <small>Select up to 5 images</small>
+                  <div style="margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; cursor: pointer;">
+                      <input type="checkbox" name="keepExistingImages" value="true" checked> Keep existing uploaded images
+                    </label>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; font-weight: bold; color: var(--text-muted, #888);">OR</div>
+                <div style="flex: 1; min-width: 250px; padding: 15px; border: 1px dashed var(--border-color, #ccc); border-radius: 8px; background: var(--light-bg, #f8f9fa);">
+                  <label for="image" style="display: block; margin-bottom: 8px;"><strong><i class="fa fa-link"></i> Update Image URL</strong></label>
+                  <input type="url" id="image" name="listing[image]" class="form-control" value="<%= listing.image %>" placeholder="https://images.unsplash.com/..." />
+                  <small>Provide a new link to an external image</small>
+                </div>
+              </div>
             </div>
 
             <div class="form-group">
@@ -90,11 +107,21 @@
                 value="<%= listing.country %>" required />
             </div>
 
+            <% const amens = listing.amenities || []; %>
             <div class="form-group span-2">
-              <label for="amenities">Amenities</label>
-              <input type="text" id="amenities" name="listing[amenities]" class="form-control"
-                value="<%= listing.amenities ? listing.amenities.join(', ') : '' %>"
-                placeholder="WiFi, AC, Parking (comma separated)" />
+              <label>Amenities</label>
+              <div class="amenities-grid">
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="WiFi" <%= amens.includes('WiFi') ? 'checked' : '' %>> <i class="fa fa-wifi"></i> WiFi</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Air Conditioning" <%= amens.includes('Air Conditioning') ? 'checked' : '' %>> <i class="fa fa-snowflake"></i> AC</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Kitchen" <%= amens.includes('Kitchen') ? 'checked' : '' %>> <i class="fa fa-utensils"></i> Kitchen</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Parking" <%= amens.includes('Parking') ? 'checked' : '' %>> <i class="fa fa-car"></i> Parking</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Pool" <%= amens.includes('Pool') ? 'checked' : '' %>> <i class="fa fa-swimming-pool"></i> Pool</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="TV" <%= amens.includes('TV') ? 'checked' : '' %>> <i class="fa fa-tv"></i> TV</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Washer" <%= amens.includes('Washer') ? 'checked' : '' %>> <i class="fa fa-jug-detergent"></i> Washer</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Gym" <%= amens.includes('Gym') ? 'checked' : '' %>> <i class="fa fa-dumbbell"></i> Gym</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Heating" <%= amens.includes('Heating') ? 'checked' : '' %>> <i class="fa fa-fire"></i> Heating</label>
+                <label class="amenity-checkbox"><input type="checkbox" name="listing[amenities][]" value="Workspace" <%= amens.includes('Workspace') ? 'checked' : '' %>> <i class="fa fa-laptop-house"></i> Workspace</label>
+              </div>
             </div>
           </div>
 
@@ -110,6 +137,7 @@
   </main>
 
   <%- include('../includes/footer.ejs') %>
+  <%- include('../includes/chatbot.ejs') %>
   <script src="/js/script.js"></script>
 </body>
 </html>

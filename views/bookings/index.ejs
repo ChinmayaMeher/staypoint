@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bookings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+      .booking-card {
+        display: flex;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        transition: transform 0.2s;
+        text-decoration: none;
+        color: inherit;
+      }
+      .booking-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      }
+      .booking-img {
+        width: 250px;
+        height: 180px;
+        object-fit: cover;
+      }
+      .booking-info {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .status-pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .status-pending { background: #fef7e0; color: #f29900; }
+      .status-confirmed { background: #e6f4ea; color: #1e8e3e; }
+      .status-cancelled { background: #fce8e6; color: #d93025; }
+    </style>
+  </head>
+  <body>
+    <%- include('../includes/navbar.ejs') %>
+    
+    <main class="container" style="max-width: 900px; margin: 40px auto; padding: 20px;">
+      <h1 style="font-family: 'Playfair Display', serif; color: #c8622a; margin-bottom: 30px;">My Bookings</h1>
+      
+      <% if (bookings.length === 0) { %>
+        <div style="text-align: center; padding: 50px; background: white; border-radius: 12px;">
+          <i class="fa fa-suitcase" style="font-size: 50px; color: #ddd; margin-bottom: 20px;"></i>
+          <h2>No bookings yet</h2>
+          <p>Time to dust off your bags and start planning your next adventure.</p>
+          <a href="/listings" class="btn btn-primary" style="margin-top: 15px; display: inline-block;">Explore Stays</a>
+        </div>
+      <% } else { %>
+        <% for (let booking of bookings) { %>
+          <a href="/bookings/<%= booking._id %>" class="booking-card">
+            <img src="<%= booking.listing.image %>" class="booking-img" alt="Listing Image">
+            <div class="booking-info">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <h3 style="margin: 0 0 10px 0;"><%= booking.listing.title %></h3>
+                  <span class="status-pill status-<%= booking.status %>"><%= booking.status %></span>
+                </div>
+                <p style="color: #666; margin: 0 0 5px 0;"><i class="fa fa-map-marker-alt"></i> <%= booking.listing.location %></p>
+                <p style="color: #666; margin: 0; font-size: 14px;">
+                  <%= new Date(booking.checkin).toLocaleDateString() %> - <%= new Date(booking.checkout).toLocaleDateString() %>
+                </p>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px;">
+                <span style="font-weight: bold; font-size: 18px;">₹<%= booking.totalPrice.toLocaleString() %></span>
+                <span style="color: #c8622a; font-size: 14px; font-weight: bold;">View Details & Ticket <i class="fa fa-arrow-right"></i></span>
+              </div>
+            </div>
+          </a>
+        <% } %>
+      <% } %>
+    </main>
+
+    <%- include('../includes/footer.ejs') %>
+  </body>
+</html>

@@ -9,13 +9,14 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/style.css?v=5" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
   </head>
   <body>
+    <%- include('../includes/navbar.ejs') %>
     <div class="flash-container">
       <% if (success && success.length) { %>
       <div class="flash flash-success">
@@ -107,6 +108,7 @@
                 method="POST"
                 onsubmit="return confirm('Delete this listing?')"
               >
+                <input type="hidden" name="_token" value="<%= csrfToken %>" />
                 <button type="submit" class="btn btn-danger">
                   <i class="fa fa-trash"></i> Delete
                 </button>
@@ -151,6 +153,7 @@
                     action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
                     method="POST"
                   >
+                    <input type="hidden" name="_token" value="<%= csrfToken %>" />
                     <button type="submit" class="btn-text-danger">
                       <i class="fa fa-trash-alt"></i> Delete review
                     </button>
@@ -167,6 +170,7 @@
                   method="POST"
                   class="review-form"
                 >
+                  <input type="hidden" name="_token" value="<%= csrfToken %>" />
                   <div class="rating-input">
                     <label>Your Rating</label>
                     <div class="star-selector">
@@ -243,214 +247,26 @@
                 <i class="fa fa-calendar-check"></i> Book Now
               </button> -->
               <!-- Book Now Button -->
-              <button
-                class="bm-btn"
-                onclick="openBookingModal()"
-                style="max-width: 300px"
-              >
-                🗓 Book Now
-              </button>
+              <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
+                <button
+                  type="button"
+                  class="bm-btn"
+                  onclick="alert('Please switch the profile to guest to book a stay.')"
+                  style="max-width: 300px"
+                >
+                  🗓 Book Now
+                </button>
+              <% } else { %>
+                <button
+                  type="button"
+                  class="bm-btn"
+                  onclick="openBookingModal()"
+                  style="max-width: 300px"
+                >
+                  🗓 Book Now
+                </button>
+              <% } %>
 
-              <!-- ===== BOOKING MODAL ===== -->
-              <div
-                class="booking-overlay"
-                id="bookingOverlay"
-                data-listing-id="<%= listing._id %>"
-                data-price="<%= listing.price %>"
-              >
-                <div class="booking-modal">
-                  <div class="bm-header">
-                    <span class="bm-title" id="bmTitle">Book your stay</span>
-                    <button class="bm-close" onclick="closeBookingModal()">
-                      ✕
-                    </button>
-                  </div>
-
-                  <!-- Steps indicator -->
-                  <div class="bm-steps" id="bmSteps">
-                    <div class="bm-step active" id="bmS1">
-                      <div class="bm-step-dot">1</div>
-                      Dates
-                    </div>
-                    <div class="bm-step" id="bmS2">
-                      <div class="bm-step-dot">2</div>
-                      Guests
-                    </div>
-                    <div class="bm-step" id="bmS3">
-                      <div class="bm-step-dot">3</div>
-                      Confirm
-                    </div>
-                  </div>
-
-                  <!-- Panel 1: Dates -->
-                  <div class="bm-panel active" id="bmPanel1">
-                    <p class="bm-label">Select dates</p>
-                    <div class="bm-date-row">
-                      <div class="bm-date-field">
-                        <label>Check-in</label>
-                        <input
-                          type="date"
-                          id="bmCheckin"
-                          onchange="bmUpdateDates()"
-                        />
-                      </div>
-                      <div class="bm-date-field">
-                        <label>Check-out</label>
-                        <input
-                          type="date"
-                          id="bmCheckout"
-                          onchange="bmUpdateDates()"
-                        />
-                      </div>
-                    </div>
-                    <div class="bm-nights-line">
-                      <span id="bmNightsLabel">Select dates to see nights</span>
-                      <span id="bmNightsPrice"></span>
-                    </div>
-                    <p class="bm-status err" id="bmDateErr"></p>
-                    <button
-                      class="bm-next-btn"
-                      id="bmNextTo2"
-                      onclick="bmShowPanel(2)"
-                      disabled
-                      style="width: 100%; padding: 12px"
-                    >
-                      Next: Guests →
-                    </button>
-                  </div>
-
-                  <!-- Panel 2: Guests -->
-                  <div class="bm-panel" id="bmPanel2">
-                    <p class="bm-label">Who's coming?</p>
-
-                    <div class="bm-guest-row">
-                      <div>
-                        <div class="bm-guest-name">Adults</div>
-                        <div class="bm-guest-hint">Ages 13+</div>
-                      </div>
-                      <div class="bm-counter">
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmAdultMinus"
-                          onclick="bmCount('adult',-1)"
-                          disabled
-                        >
-                          −
-                        </button>
-                        <span class="bm-cnt-val" id="bmAdultCount">1</span>
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmAdultPlus"
-                          onclick="bmCount('adult',1)"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="bm-guest-row">
-                      <div>
-                        <div class="bm-guest-name">Children</div>
-                        <div class="bm-guest-hint">Ages 2–12</div>
-                      </div>
-                      <div class="bm-counter">
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmChildMinus"
-                          onclick="bmCount('child',-1)"
-                          disabled
-                        >
-                          −
-                        </button>
-                        <span class="bm-cnt-val" id="bmChildCount">0</span>
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmChildPlus"
-                          onclick="bmCount('child',1)"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="bm-guest-row">
-                      <div>
-                        <div class="bm-guest-name">Infants</div>
-                        <div class="bm-guest-hint">Under 2</div>
-                      </div>
-                      <div class="bm-counter">
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmInfantMinus"
-                          onclick="bmCount('infant',-1)"
-                          disabled
-                        >
-                          −
-                        </button>
-                        <span class="bm-cnt-val" id="bmInfantCount">0</span>
-                        <button
-                          class="bm-cnt-btn"
-                          id="bmInfantPlus"
-                          onclick="bmCount('infant',1)"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="bm-nav-row">
-                      <button class="bm-back-btn" onclick="bmShowPanel(1)">
-                        ← Back
-                      </button>
-                      <button
-                        class="bm-next-btn"
-                        onclick="bmBuildSummary(); bmShowPanel(3)"
-                      >
-                        Next: Review →
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Panel 3: Confirm -->
-                  <div class="bm-panel" id="bmPanel3">
-                    <p class="bm-label">Review & confirm</p>
-                    <div class="bm-summary-box" id="bmSummaryBox"></div>
-                    <div class="bm-breakdown" id="bmBreakdown"></div>
-                    <button
-                      class="bm-btn"
-                      id="bmConfirmBtn"
-                      onclick="bmSubmit()"
-                    >
-                      ✔ Confirm Booking
-                    </button>
-                    <div class="bm-nav-row">
-                      <button class="bm-back-btn" onclick="bmShowPanel(2)">
-                        ← Edit guests
-                      </button>
-                    </div>
-                    <p class="bm-status" id="bmConfirmStatus"></p>
-                  </div>
-
-                  <!-- Success Screen -->
-                  <div class="bm-success" id="bmSuccess">
-                    <div class="bm-success-icon">✅</div>
-                    <h3>Booking confirmed!</h3>
-                    <p>
-                      Your reservation has been submitted.<br />A confirmation
-                      will be sent to your email.
-                    </p>
-                    <p class="bm-ref" id="bmRef"></p>
-                    <button
-                      class="bm-btn"
-                      onclick="closeBookingModal()"
-                      style="max-width: 180px"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <!-- ===== END BOOKING MODAL ===== -->
               <% } else { %>
               <a href="/login" class="btn btn-primary btn-full"
                 >Login to Book</a
@@ -479,6 +295,140 @@
       </div>
     </main>
 
-    <script src="/js/script.js"></script>
+    <% if (currUser) { %>
+    <style>
+      .booking-overlay.open {
+        display: flex !important;
+      }
+    </style>
+    <!-- ===== BOOKING MODAL ===== -->
+    <div
+      class="booking-overlay"
+      id="bookingOverlay"
+      data-listing-id="<%= listing._id %>"
+      data-price="<%= listing.price %>"
+      style="z-index: 99999 !important;"
+    >
+      <div class="booking-modal">
+        <div class="bm-header">
+          <span class="bm-title" id="bmTitle">Book your stay</span>
+          <button class="bm-close" onclick="closeBookingModal()">✕</button>
+        </div>
+
+        <!-- Steps indicator -->
+        <div class="bm-steps" id="bmSteps">
+          <div class="bm-step active" id="bmS1">
+            <div class="bm-step-dot">1</div>
+            Dates
+          </div>
+          <div class="bm-step" id="bmS2">
+            <div class="bm-step-dot">2</div>
+            Guests
+          </div>
+          <div class="bm-step" id="bmS3">
+            <div class="bm-step-dot">3</div>
+            Confirm
+          </div>
+        </div>
+
+        <!-- Panel 1: Dates -->
+        <div class="bm-panel active" id="bmPanel1">
+          <p class="bm-label">Select dates</p>
+          <div class="bm-date-row">
+            <div class="bm-date-field">
+              <label>Check-in</label>
+              <input type="date" id="bmCheckin" onchange="bmUpdateDates()" />
+            </div>
+            <div class="bm-date-field">
+              <label>Check-out</label>
+              <input type="date" id="bmCheckout" onchange="bmUpdateDates()" />
+            </div>
+          </div>
+          <div class="bm-nights-line">
+            <span id="bmNightsLabel">Select dates to see nights</span>
+            <span id="bmNightsPrice"></span>
+          </div>
+          <p class="bm-status err" id="bmDateErr"></p>
+          <button
+            class="bm-next-btn"
+            id="bmNextTo2"
+            onclick="bmShowPanel(2)"
+            disabled
+            style="width: 100%; padding: 12px"
+          >
+            Next: Guests →
+          </button>
+        </div>
+
+        <!-- Panel 2: Guests -->
+        <div class="bm-panel" id="bmPanel2">
+          <p class="bm-label">Who's coming?</p>
+          <div class="bm-guest-row">
+            <div>
+              <div class="bm-guest-name">Adults</div>
+              <div class="bm-guest-hint">Ages 13+</div>
+            </div>
+            <div class="bm-counter">
+              <button class="bm-cnt-btn" id="bmAdultMinus" onclick="bmCount('adult',-1)" disabled>−</button>
+              <span class="bm-cnt-val" id="bmAdultCount">1</span>
+              <button class="bm-cnt-btn" id="bmAdultPlus" onclick="bmCount('adult',1)">+</button>
+            </div>
+          </div>
+          <div class="bm-guest-row">
+            <div>
+              <div class="bm-guest-name">Children</div>
+              <div class="bm-guest-hint">Ages 2–12</div>
+            </div>
+            <div class="bm-counter">
+              <button class="bm-cnt-btn" id="bmChildMinus" onclick="bmCount('child',-1)" disabled>−</button>
+              <span class="bm-cnt-val" id="bmChildCount">0</span>
+              <button class="bm-cnt-btn" id="bmChildPlus" onclick="bmCount('child',1)">+</button>
+            </div>
+          </div>
+          <div class="bm-guest-row">
+            <div>
+              <div class="bm-guest-name">Infants</div>
+              <div class="bm-guest-hint">Under 2</div>
+            </div>
+            <div class="bm-counter">
+              <button class="bm-cnt-btn" id="bmInfantMinus" onclick="bmCount('infant',-1)" disabled>−</button>
+              <span class="bm-cnt-val" id="bmInfantCount">0</span>
+              <button class="bm-cnt-btn" id="bmInfantPlus" onclick="bmCount('infant',1)">+</button>
+            </div>
+          </div>
+          <div class="bm-nav-row">
+            <button class="bm-back-btn" onclick="bmShowPanel(1)">← Back</button>
+            <button class="bm-next-btn" onclick="bmBuildSummary(); bmShowPanel(3)">Next: Review →</button>
+          </div>
+        </div>
+
+        <!-- Panel 3: Confirm -->
+        <div class="bm-panel" id="bmPanel3">
+          <p class="bm-label">Review & confirm</p>
+          <div class="bm-summary-box" id="bmSummaryBox"></div>
+          <div class="bm-breakdown" id="bmBreakdown"></div>
+          <button type="button" class="bm-btn" id="bmConfirmBtn" onclick="bmSubmit()">✔ Confirm Booking</button>
+          <div class="bm-nav-row">
+            <button class="bm-back-btn" onclick="bmShowPanel(2)">← Edit guests</button>
+          </div>
+          <p class="bm-status" id="bmConfirmStatus"></p>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="bm-success" id="bmSuccess">
+          <div class="bm-success-icon">✅</div>
+          <h3>Booking confirmed!</h3>
+          <p>Your reservation has been submitted.<br />A confirmation will be sent to your email.</p>
+          <p class="bm-ref" id="bmRef"></p>
+          <button class="bm-btn" onclick="closeBookingModal()" style="max-width: 180px">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== END BOOKING MODAL ===== -->
+    <% } %>
+
+    <%- include('../includes/footer.ejs') %>
+    <%- include('../includes/chatbot.ejs') %>
+    <script src="/js/script.js?v=8"></script>
   </body>
 </html>

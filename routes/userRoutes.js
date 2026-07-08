@@ -32,7 +32,15 @@ router.post("/signup", async (req, res, next) => {
     });
   } catch (err) {
     console.error("Signup Error:", err);
-    req.flash("error", err.message);
+    if (err.code === 11000) {
+      if (err.keyPattern && err.keyPattern.email) {
+        req.flash("error", "A user with that email is already registered.");
+      } else {
+        req.flash("error", "A user with that username is already registered.");
+      }
+    } else {
+      req.flash("error", err.message);
+    }
     return res.redirect("/signup");
   }
 });
