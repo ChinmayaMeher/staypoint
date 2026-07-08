@@ -236,4 +236,5 @@ For support or inquiries, please open an issue on GitHub or contact the maintain
 
 ---
 
-**StayPoint** - Find your perfect stay 🏠
+**StayPoint** - Find your perfect stay 🏠#   s t a y p o i n t  
+ 
