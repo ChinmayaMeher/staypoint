@@ -164,13 +164,13 @@ router.post(
       // Handle uploaded images
       if (req.files && req.files.length > 0) {
         listingData.images = req.files.map((file, index) => ({
-          url: `/uploads/listings/${file.filename}`,
+          url: file.path,
           filename: file.filename,
           caption: req.body.imageCaptions?.[index] || "",
           isPrimary: index === 0,
         }));
         // Set the first image as the main image for backward compatibility
-        listingData.image = `/uploads/listings/${req.files[0].filename}`;
+        listingData.image = req.files[0].path;
       }
 
       const newListing = new Listing(listingData);
@@ -310,7 +310,7 @@ router.put(
       // Handle new image uploads
       if (req.files && req.files.length > 0) {
         const newImages = req.files.map((file, index) => ({
-          url: `/uploads/listings/${file.filename}`,
+          url: file.path,
           filename: file.filename,
           caption: req.body.imageCaptions?.[index] || "",
           isPrimary: index === 0,

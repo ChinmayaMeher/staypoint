@@ -110,7 +110,7 @@ router.post("/avatar", isLoggedIn, uploadAvatar.single("avatar"), handleMulterEr
     }
     
     const user = await User.findById(req.user._id);
-    user.avatar = `/uploads/avatars/${req.file.filename}`;
+    user.avatar = req.file.path;
     await user.save();
     
     req.flash("success", "Avatar updated successfully!");
