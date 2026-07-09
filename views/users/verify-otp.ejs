@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In — StayPoint</title>
+    <title>Verify OTP — StayPoint</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
@@ -45,7 +45,6 @@
         min-height: 100vh;
       }
 
-      /* ── background texture ── */
       body::before {
         content: "";
         position: fixed;
@@ -63,7 +62,6 @@
         pointer-events: none;
       }
 
-      /* ── card ── */
       .card {
         width: min(460px, 94vw);
         background: #fff;
@@ -84,7 +82,6 @@
         }
       }
 
-      /* ── header banner ── */
       .card-header {
         background: linear-gradient(
           145deg,
@@ -159,12 +156,10 @@
         font-weight: 300;
       }
 
-      /* ── body ── */
       .card-body {
         padding: 32px 40px 36px;
       }
 
-      /* flash messages */
       .flash {
         border-radius: 10px;
         padding: 11px 14px;
@@ -185,59 +180,6 @@
         border: 1px solid #f5c2ba;
       }
 
-      /* google btn */
-      .btn-google {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 13px;
-        border: 1.5px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14.5px;
-        font-weight: 500;
-        color: var(--brown);
-        cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-        text-decoration: none;
-      }
-      .btn-google:hover {
-        border-color: #bbb;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-        transform: translateY(-1px);
-      }
-      .btn-google img {
-        width: 20px;
-        height: 20px;
-      }
-
-      /* divider */
-      .divider {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin: 20px 0;
-      }
-      .divider span {
-        font-size: 12px;
-        color: var(--muted);
-        font-weight: 400;
-        white-space: nowrap;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-      }
-      .divider::before,
-      .divider::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border);
-      }
-
-      /* form */
       .field {
         margin-bottom: 18px;
       }
@@ -262,18 +204,20 @@
         font-size: 14px;
         pointer-events: none;
       }
-      input[type="text"],
-      input[type="password"] {
+      input[type="text"] {
         width: 100%;
         padding: 12px 14px 12px 40px;
         border: 1.5px solid var(--border);
         border-radius: 12px;
         font-family: "DM Sans", sans-serif;
-        font-size: 14.5px;
+        font-size: 18px;
+        letter-spacing: 8px;
         color: var(--brown);
         background: var(--cream);
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        text-align: center;
+        font-weight: bold;
       }
       input:focus {
         border-color: var(--rust);
@@ -282,23 +226,11 @@
       }
       input::placeholder {
         color: #bfb3aa;
+        letter-spacing: normal;
+        font-weight: normal;
+        font-size: 14.5px;
       }
 
-      /* eye toggle */
-      .eye-toggle {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--muted);
-        font-size: 14px;
-        padding: 2px;
-      }
-
-      /* submit */
       .btn-submit {
         width: 100%;
         padding: 14px;
@@ -327,7 +259,6 @@
         transform: translateY(0);
       }
 
-      /* footer link */
       .card-footer {
         text-align: center;
         margin-top: 24px;
@@ -346,19 +277,16 @@
   </head>
   <body>
     <div class="card">
-      <!-- Header -->
       <div class="card-header">
         <div class="brand">
           <div class="brand-icon"><i class="fa-regular fa-compass"></i></div>
           <span class="brand-name">StayPoint</span>
         </div>
-        <h1>Welcome Back</h1>
-        <p>Sign in to your account</p>
+        <h1>Enter OTP</h1>
+        <p>Sent to <%= email %></p>
       </div>
 
-      <!-- Body -->
       <div class="card-body">
-        <!-- Flash messages -->
         <% if (success && success.length) { %>
         <div class="flash success">
           <i class="fa-solid fa-circle-check"></i> <%= success[0] %>
@@ -369,88 +297,33 @@
         </div>
         <% } %>
 
-        <!-- Google (optional — remove if not configured) -->
-        <%# Uncomment below if you add Google OAuth later %> <%#
-        <a href="/auth/google" class="btn-google">
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-          />
-          Continue with Google
-        </a>
-        <div class="divider"><span>or</span></div>
-        %>
-
-        <!-- Login Form -->
-        <form action="/login" method="POST" novalidate>
-          <input type="hidden" name="_token" value="<%= csrfToken %>" />
+        <form action="/verify-otp" method="POST" novalidate>
           <div class="field">
-            <label for="username">Username</label>
+            <label for="otp">One-Time Password</label>
             <div class="input-wrap">
-              <i class="fa-regular fa-user"></i>
+              <i class="fa-solid fa-key"></i>
               <input
                 type="text"
-                id="username"
-                name="username"
-                placeholder="Your username"
+                id="otp"
+                name="otp"
+                placeholder="6-digit code"
                 required
-                autocomplete="username"
+                maxlength="6"
+                pattern="\\d{6}"
               />
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="password">Password</label>
-            <div class="input-wrap">
-              <i class="fa-solid fa-lock"></i>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Your password"
-                required
-                autocomplete="current-password"
-              />
-              <button
-                type="button"
-                class="eye-toggle"
-                onclick="togglePwd(this)"
-                aria-label="Toggle password"
-              >
-                <i class="fa-regular fa-eye"></i>
-              </button>
-            </div>
-            <div style="text-align: right; margin-top: 6px;">
-              <a href="/forgot-password" style="font-size: 12px; color: var(--rust); text-decoration: none; font-weight: 500;">Forgot Password?</a>
             </div>
           </div>
 
           <button type="submit" class="btn-submit">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            Sign In
+            <i class="fa-solid fa-check-circle"></i>
+            Verify OTP
           </button>
         </form>
 
         <div class="card-footer">
-          Don't have an account? <a href="/signup">Sign up free</a>
+          Didn't receive it? <a href="/forgot-password">Resend OTP</a>
         </div>
       </div>
     </div>
-
-    <%- include('../includes/chatbot.ejs') %>
-    <script src="/js/script.js"></script>
-    <script>
-      function togglePwd(btn) {
-        const input = btn.closest(".input-wrap").querySelector("input");
-        const icon = btn.querySelector("i");
-        if (input.type === "password") {
-          input.type = "text";
-          icon.className = "fa-regular fa-eye-slash";
-        } else {
-          input.type = "password";
-          icon.className = "fa-regular fa-eye";
-        }
-      }
-    </script>
   </body>
 </html>

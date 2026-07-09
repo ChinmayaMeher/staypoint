@@ -71,6 +71,8 @@ const userSchema = new mongoose.Schema(
     verificationToken: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    resetOtp: String,
+    resetOtpExpires: Date,
     // Preferences
     language: {
       type: String,

@@ -104,7 +104,42 @@ async function sendBookingCancellation(user, booking) {
   }
 }
 
+/**
+ * Sends a password reset OTP email
+ * @param {Object} user - The user object
+ * @param {String} otp - The 6-digit OTP
+ */
+async function sendPasswordResetOtp(user, otp) {
+  try {
+    const t = await setupTransporter();
+    const info = await t.sendMail({
+      from: '"StayPoint Security" <no-reply@staypoint.com>',
+      to: user.email,
+      subject: `Password Reset OTP: ${otp}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 style="color: #c8622a;">Reset Your Password</h2>
+          <p>Hi ${user.fullName || user.username},</p>
+          <p>We received a request to reset your password. Use the following One-Time Password (OTP) to proceed:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <span style="background-color: #f2eae0; color: #3a2318; padding: 15px 30px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 4px;">${otp}</span>
+          </div>
+          <p>This OTP is valid for the next 10 minutes. If you did not request a password reset, please ignore this email.</p>
+          <p>Thank you,<br>The StayPoint Team</p>
+        </div>
+      `,
+    });
+    console.log("OTP Email sent: %s", info.messageId);
+    if (info.messageId && nodemailer.getTestMessageUrl(info)) {
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    }
+  } catch (error) {
+    console.error("Error sending OTP email:", error);
+  }
+}
+
 module.exports = {
   sendBookingConfirmation,
   sendBookingCancellation,
+  sendPasswordResetOtp,
 };
