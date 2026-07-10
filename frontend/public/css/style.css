@@ -2021,3 +2021,58 @@ select.form-control {
   font-size: 13px;
   color: #aaa;
 }
+
+/* ========================================= */
+/*             GLOBAL PAGE LOADER            */
+/* ========================================= */
+#global-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(253, 245, 240, 0.85); /* StayPoint cream/warm background */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#global-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-content {
+  text-align: center;
+  color: #a85d38;
+}
+
+.loader-content i {
+  font-size: 3.5rem;
+  animation: pulse-spin 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 10px rgba(168, 93, 56, 0.3));
+}
+
+.loader-content .loader-text {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  animation: pulse-opacity 2s infinite ease-in-out;
+}
+
+@keyframes pulse-spin {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+  50% { transform: scale(1.15) rotate(180deg); opacity: 1; color: #7a4124; }
+  100% { transform: scale(1) rotate(360deg); opacity: 0.9; }
+}
+
+@keyframes pulse-opacity {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; text-shadow: 0 0 15px rgba(168, 93, 56, 0.2); }
+}

@@ -353,3 +353,46 @@ if (chatbotSuggestions) {
     askStayPoint(e.target.textContent);
   });
 }
+
+/* ========================================= */
+/*             GLOBAL PAGE LOADER            */
+/* ========================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const loader = document.getElementById("global-loader");
+  if (!loader) return;
+
+  // 1. Fade out the loader once the page has fully loaded
+  window.addEventListener("load", () => {
+    // Add a tiny delay so the beautiful animation is seen for a split second
+    setTimeout(() => {
+      loader.classList.add("hidden");
+    }, 200);
+  });
+
+  // 2. Fade the loader back IN when clicking a link that leaves the page
+  const links = document.querySelectorAll("a");
+  links.forEach(link => {
+    link.addEventListener("click", (e) => {
+      // Don't trigger for new tabs, anchors on the same page, or Javascript links
+      if (
+        link.target === "_blank" ||
+        link.getAttribute("href").startsWith("#") ||
+        link.getAttribute("href").startsWith("javascript:") ||
+        e.ctrlKey || e.metaKey // user is holding ctrl/cmd to open in new tab
+      ) {
+        return;
+      }
+      
+      // Show loader
+      loader.classList.remove("hidden");
+    });
+  });
+
+  // 3. Fade the loader back IN when submitting a form (like Search, Login, Booking)
+  const forms = document.querySelectorAll("form");
+  forms.forEach(form => {
+    form.addEventListener("submit", () => {
+      loader.classList.remove("hidden");
+    });
+  });
+});
