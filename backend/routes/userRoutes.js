@@ -106,19 +106,24 @@ router.get("/forgot-password", (req, res) => {
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const emailInput = email.trim().toLowerCase();
+    const user = await User.findOne({ email: emailInput });
     
     if (!user) {
-      req.flash("error", "If that email exists, an OTP has been sent.");
-      return res.redirect("/forgot-password");
+      // Prevent email enumeration by pretending we sent an OTP
+      req.session.resetEmail = emailInput;
+      req.flash("success", "An OTP has been sent to your email.");
+      return req.session.save(() => {
+        res.redirect("/verify-otp");
+      });
     }
 
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     
-    // Save to user (valid for 10 minutes)
+    // Save to user (valid for 4 minutes)
     user.resetOtp = otp;
-    user.resetOtpExpires = Date.now() + 10 * 60 * 1000;
+    user.resetOtpExpires = Date.now() + 4 * 60 * 1000;
     await user.save();
 
     // Send email
@@ -127,7 +132,9 @@ router.post("/forgot-password", async (req, res) => {
     // Save email in session to verify OTP against it later
     req.session.resetEmail = user.email;
     req.flash("success", "An OTP has been sent to your email.");
-    res.redirect("/verify-otp");
+    req.session.save(() => {
+      res.redirect("/verify-otp");
+    });
   } catch (err) {
     console.error("Error in forgot-password:", err);
     req.flash("error", "Something went wrong. Please try again.");
@@ -156,7 +163,7 @@ router.post("/verify-otp", async (req, res) => {
     }
 
     const user = await User.findOne({ 
-      email: email.toLowerCase(),
+      email: email.trim().toLowerCase(),
       resetOtp: otp,
       resetOtpExpires: { $gt: Date.now() }
     });
@@ -168,7 +175,9 @@ router.post("/verify-otp", async (req, res) => {
 
     // OTP is valid. Set a flag for the reset password step
     req.session.canResetPassword = true;
-    res.redirect("/reset-password");
+    req.session.save(() => {
+      res.redirect("/reset-password");
+    });
   } catch (err) {
     console.error("Error in verify-otp:", err);
     req.flash("error", "Something went wrong. Please try again.");

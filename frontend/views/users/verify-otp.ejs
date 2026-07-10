@@ -300,7 +300,12 @@
         <form action="/verify-otp" method="POST" novalidate>
           <input type="hidden" name="_token" value="<%= csrfToken %>" />
           <div class="field">
-            <label for="otp">One-Time Password</label>
+            <label for="otp" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>One-Time Password</span>
+              <span id="timer" style="color: var(--rust); font-weight: 600; font-size: 12px; text-transform: none; letter-spacing: normal;">
+                <i class="fa-regular fa-clock"></i> 04:00
+              </span>
+            </label>
             <div class="input-wrap">
               <i class="fa-solid fa-key"></i>
               <input
@@ -326,5 +331,23 @@
         </div>
       </div>
     </div>
+    <script>
+      let timeLeft = 4 * 60;
+      const timerElement = document.getElementById('timer');
+      
+      const countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          timerElement.innerHTML = '<i class="fa-regular fa-clock"></i> Expired';
+          timerElement.style.color = 'var(--muted)';
+          return;
+        }
+        
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.innerHTML = `<i class="fa-regular fa-clock"></i> ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    </script>
   </body>
 </html>

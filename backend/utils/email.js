@@ -117,15 +117,21 @@ async function sendPasswordResetOtp(user, otp) {
       to: user.email,
       subject: `Password Reset OTP: ${otp}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-          <h2 style="color: #c8622a;">Reset Your Password</h2>
-          <p>Hi ${user.fullName || user.username},</p>
-          <p>We received a request to reset your password. Use the following One-Time Password (OTP) to proceed:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <span style="background-color: #f2eae0; color: #3a2318; padding: 15px 30px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 4px;">${otp}</span>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #eaeaea; border-radius: 12px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h2 style="color: #c8622a; margin: 0; font-size: 24px;">Reset Your Password</h2>
           </div>
-          <p>This OTP is valid for the next 10 minutes. If you did not request a password reset, please ignore this email.</p>
-          <p>Thank you,<br>The StayPoint Team</p>
+          <p style="color: #333333; font-size: 16px;">Hi ${user.fullName || user.username},</p>
+          <p style="color: #555555; font-size: 15px; line-height: 1.5;">We received a request to reset your password. Click the button below to proceed securely:</p>
+          <div style="text-align: center; margin: 35px 0;">
+            <a href="${process.env.APP_URL || 'http://localhost:8080'}/verify-otp" style="background-color: #c8622a; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(200, 98, 42, 0.2);">Reset Password</a>
+          </div>
+          <p style="text-align: center; font-size: 14px; color: #777777;">Or use this 6-digit verification code manually:</p>
+          <div style="text-align: center; margin: 15px 0 30px;">
+            <span style="background-color: #f8f1eb; color: #3a2318; padding: 12px 24px; border-radius: 8px; font-size: 22px; font-weight: 700; letter-spacing: 6px; border: 1px solid #e0d4c8;">${otp}</span>
+          </div>
+          <p style="color: #777777; font-size: 13px; line-height: 1.5; border-top: 1px solid #eaeaea; padding-top: 20px;">This link and code are valid for the next <strong>4 minutes</strong>. If you did not request a password reset, you can safely ignore this email.</p>
+          <p style="color: #777777; font-size: 13px;">Thank you,<br><strong>The StayPoint Team</strong></p>
         </div>
       `,
     });
