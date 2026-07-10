@@ -68,6 +68,26 @@ router.post(
   }
 );
 
+// ─── GOOGLE OAUTH ROUTES ──────────────────────────────────────
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
+  (req, res) => {
+    req.flash("success", `Welcome to StayPoint, ${req.user.firstName || req.user.username}!`);
+    const redirectUrl = req.session.returnTo || "/listings";
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
+  }
+);
+
 // ─── GET /logout ──────────────────────────────────────────────
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {

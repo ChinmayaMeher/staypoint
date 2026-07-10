@@ -12,6 +12,7 @@ const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("./models/user.js");
 
 // Import routes
@@ -93,6 +94,51 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+
+// Google OAuth Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID || 'dummy_client_id',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'dummy_client_secret',
+    callbackURL: "/auth/google/callback",
+    proxy: true // trust the proxy (e.g. Vercel)
+  },
+  async function(accessToken, refreshToken, profile, cb) {
+    try {
+      // Check if user already exists
+      let user = await User.findOne({ 
+        $or: [
+          { googleId: profile.id },
+          { email: profile.emails[0].value }
+        ]
+      });
+
+      if (user) {
+        // Update googleId if they originally signed up with email
+        if (!user.googleId) {
+          user.googleId = profile.id;
+          await user.save();
+        }
+        return cb(null, user);
+      } else {
+        // Create a new user
+        const newUser = new User({
+          googleId: profile.id,
+          username: profile.displayName.replace(/\s+/g, '').toLowerCase() + Math.floor(Math.random() * 1000),
+          email: profile.emails[0].value,
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
+          avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : undefined,
+          isVerified: true
+        });
+        await newUser.save();
+        return cb(null, newUser);
+      }
+    } catch (err) {
+      return cb(err, null);
+    }
+  }
+));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
