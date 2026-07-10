@@ -53,7 +53,7 @@ async function main() {
 
 // ===== VIEW ENGINE =====
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../frontend/views"));
 app.set("trust proxy", 1);
 
 // ===== SECURITY MIDDLEWARE =====
@@ -65,7 +65,7 @@ app.use(xssProtection);
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.json({ limit: "10mb" }));
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend/public")));
 
 // Rate limiting for API routes
 app.use("/api/", apiLimiter);
