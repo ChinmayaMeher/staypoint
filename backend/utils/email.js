@@ -108,8 +108,9 @@ async function sendBookingCancellation(user, booking) {
  * Sends a password reset OTP email
  * @param {Object} user - The user object
  * @param {String} otp - The 6-digit OTP
+ * @param {String} hostUrl - The base URL of the website
  */
-async function sendPasswordResetOtp(user, otp) {
+async function sendPasswordResetOtp(user, otp, hostUrl) {
   try {
     const t = await setupTransporter();
     const info = await t.sendMail({
@@ -124,7 +125,7 @@ async function sendPasswordResetOtp(user, otp) {
           <p style="color: #333333; font-size: 16px;">Hi ${user.fullName || user.username},</p>
           <p style="color: #555555; font-size: 15px; line-height: 1.5;">We received a request to reset your password. Click the button below to proceed securely:</p>
           <div style="text-align: center; margin: 35px 0;">
-            <a href="${process.env.APP_URL || 'http://localhost:8080'}/verify-otp" style="background-color: #c8622a; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(200, 98, 42, 0.2);">Reset Password</a>
+            <a href="${hostUrl}/verify-otp?email=${encodeURIComponent(user.email)}&otp=${otp}" style="background-color: #c8622a; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 12px rgba(200, 98, 42, 0.2);">Reset Password</a>
           </div>
           <p style="text-align: center; font-size: 14px; color: #777777;">Or use this 6-digit verification code manually:</p>
           <div style="text-align: center; margin: 15px 0 30px;">

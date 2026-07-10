@@ -127,7 +127,9 @@ router.post("/forgot-password", async (req, res) => {
     await user.save();
 
     // Send email
-    await sendPasswordResetOtp(user, otp);
+    const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+    const hostUrl = `${protocol}://${req.headers.host}`;
+    await sendPasswordResetOtp(user, otp, hostUrl);
 
     // Save email in session to verify OTP against it later
     req.session.resetEmail = user.email;
@@ -143,7 +145,28 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 // ─── GET /verify-otp ──────────────────────────────────────────
-router.get("/verify-otp", (req, res) => {
+router.get("/verify-otp", async (req, res) => {
+  // Auto-verify if clicked from email link
+  if (req.query.email && req.query.otp) {
+    const emailInput = req.query.email.trim().toLowerCase();
+    const user = await User.findOne({ 
+      email: emailInput,
+      resetOtp: req.query.otp,
+      resetOtpExpires: { $gt: Date.now() }
+    });
+
+    if (user) {
+      req.session.resetEmail = emailInput;
+      req.session.canResetPassword = true;
+      return req.session.save(() => {
+        res.redirect("/reset-password");
+      });
+    } else {
+      req.flash("error", "The password reset link is invalid or has expired.");
+      return res.redirect("/forgot-password");
+    }
+  }
+
   if (!req.session.resetEmail) {
     req.flash("error", "Session expired. Please try again.");
     return res.redirect("/forgot-password");
