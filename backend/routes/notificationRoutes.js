@@ -45,4 +45,18 @@ router.patch('/:id/read', isLoggedIn, async (req, res) => {
   }
 });
 
+// POST /notifications/mark-all-read - Mark all notifications as read
+router.post('/mark-all-read', isLoggedIn, async (req, res) => {
+  try {
+    await Notification.updateMany(
+      { recipient: req.user._id, isRead: false },
+      { isRead: true }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error marking all notifications as read:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
