@@ -6,6 +6,12 @@
 
   <div class="navbar-links">
     <% if (currUser) { %>
+      <a href="/notifications" class="nav-link" style="position: relative; margin-right: 15px; display: inline-flex; align-items: center; justify-content: center;">
+        <i class="fa fa-bell" style="font-size: 1.2rem;"></i>
+        <% if (unreadNotificationCount > 0) { %>
+          <span style="position: absolute; top: -5px; right: -10px; background-color: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; border: 2px solid white;"><%= unreadNotificationCount %></span>
+        <% } %>
+      </a>
       <span class="nav-user">
         <i class="fa fa-user-circle"></i> <%= currUser.username %>
       </span>
@@ -34,6 +40,12 @@
 
   <div class="mobile-menu" id="mobileMenu">
     <% if (currUser) { %>
+      <a href="/notifications" style="position: relative; display: inline-block; width: max-content;">
+        Notifications
+        <% if (unreadNotificationCount > 0) { %>
+          <span style="background-color: #e74c3c; color: white; border-radius: 50%; padding: 2px 8px; font-size: 12px; font-weight: bold; margin-left: 5px;"><%= unreadNotificationCount %></span>
+        <% } %>
+      </a>
       <span class="nav-user"><i class="fa fa-user-circle"></i> <%= currUser.username %></span>
       <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
         <a href="/listings/new">+ List Your Room</a>
