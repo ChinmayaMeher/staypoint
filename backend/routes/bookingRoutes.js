@@ -373,6 +373,27 @@ router.patch("/:id/status", isLoggedIn, isBookingHost, verifyCSRF, async (req, r
       const populatedBooking = await Booking.findById(booking._id).populate("guest");
       if (populatedBooking.guest) {
         sendBookingCancellation(populatedBooking.guest, populatedBooking);
+        
+        // Notify guest
+        await Notification.create({
+          recipient: populatedBooking.guest._id,
+          sender: req.user._id,
+          type: 'booking_cancelled',
+          message: `The host cancelled your booking for ${populatedBooking.listing?.title || 'a listing'}`,
+          link: `/bookings/${booking._id}`
+        });
+      }
+    } else if (status === "confirmed" && booking.guest) {
+      const populatedBooking = await Booking.findById(booking._id).populate("guest");
+      if (populatedBooking.guest) {
+        // Notify guest
+        await Notification.create({
+          recipient: populatedBooking.guest._id,
+          sender: req.user._id,
+          type: 'booking_status',
+          message: `The host confirmed your booking!`,
+          link: `/bookings/${booking._id}`
+        });
       }
     }
     
@@ -402,6 +423,15 @@ router.post("/:id/cancel", isLoggedIn, isBookingGuest, verifyCSRF, async (req, r
 
     // Send cancellation email
     sendBookingCancellation(req.user, booking);
+
+    // Notify Host
+    await Notification.create({
+      recipient: booking.host,
+      sender: req.user._id,
+      type: 'booking_cancelled',
+      message: `${req.user.username} cancelled their booking`,
+      link: `/bookings/host/${booking._id}`
+    });
 
     req.flash("success", "Booking cancelled successfully");
     res.redirect("/bookings");
