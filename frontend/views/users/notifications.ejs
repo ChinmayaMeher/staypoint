@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container" style="max-width: 800px; margin: 40px auto; padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="color: var(--text-dark); margin: 0;">Your Notifications</h2>
+    <% if (notifications && notifications.some(n => !n.isRead)) { %>
+      <button id="markAllReadBtn" class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">Mark all as read</button>
+    <% } %>
+  </div>
+
+  <% if (!notifications || notifications.length === 0) { %>
+    <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 12px; border: 1px solid var(--border);">
+      <i class="fa fa-bell-slash" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+      <h3 style="color: var(--text-dark); margin-bottom: 10px;">No notifications yet</h3>
+      <p style="color: var(--text-light);">When you get a booking or review, it will show up here.</p>
+    </div>
+  <% } else { %>
+    <div class="notification-list" style="display: flex; flex-direction: column; gap: 15px;">
+      <% notifications.forEach(notification => { %>
+        <div class="notification-item <%= notification.isRead ? 'read' : 'unread' %>" 
+             data-id="<%= notification._id %>"
+             style="display: flex; align-items: flex-start; padding: 20px; background: white; border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s ease; position: relative; <%= notification.isRead ? 'opacity: 0.7;' : 'border-left: 4px solid #c8622a; box-shadow: 0 4px 12px rgba(0,0,0,0.05);' %>">
+          
+          <div style="margin-right: 15px; font-size: 24px; color: #c8622a;">
+            <% if (notification.type === 'booking_new') { %>
+              <i class="fa fa-calendar-plus"></i>
+            <% } else if (notification.type === 'booking_cancelled') { %>
+              <i class="fa fa-calendar-times"></i>
+            <% } else if (notification.type === 'review_new') { %>
+              <i class="fa fa-star"></i>
+            <% } else { %>
+              <i class="fa fa-info-circle"></i>
+            <% } %>
+          </div>
+          
+          <div style="flex-grow: 1;">
+            <p style="margin: 0 0 5px 0; color: var(--text-dark); font-size: 16px; line-height: 1.4;">
+              <%= notification.message %>
+            </p>
+            <div style="display: flex; gap: 15px; align-items: center; font-size: 13px; color: var(--text-light);">
+              <span><%= new Date(notification.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' }) %></span>
+              
+              <% if (notification.link) { %>
+                <a href="<%= notification.link %>" style="color: #c8622a; text-decoration: none; font-weight: 500;">View details <i class="fa fa-arrow-right" style="font-size: 10px;"></i></a>
+              <% } %>
+            </div>
+          </div>
+
+          <% if (!notification.isRead) { %>
+            <button class="mark-read-btn" data-id="<%= notification._id %>" style="background: none; border: none; color: var(--text-light); cursor: pointer; padding: 5px; margin-left: 10px;" title="Mark as read">
+              <i class="fa fa-check-circle" style="font-size: 18px;"></i>
+            </button>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<script src="/js/notifications.js"></script>
