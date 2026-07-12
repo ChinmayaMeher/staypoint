@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
+const Notification = require("../models/notification.js");
 
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -20,6 +21,18 @@ router.post("/", isLoggedIn, async (req, res) => {
     listing.reviews.push(newReview);
     await newReview.save();
     await listing.save();
+    
+    // Notify host if the review isn't by the host themselves
+    if (!listing.owner.equals(req.user._id)) {
+      await Notification.create({
+        recipient: listing.owner,
+        sender: req.user._id,
+        type: 'review_new',
+        message: `${req.user.username} left a review on your listing: ${listing.title}`,
+        link: `/listings/${listing._id}`
+      });
+    }
+
     req.flash("success", "Review added!");
     res.redirect(`/listings/${req.params.id}`);
   } catch (err) {
