@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/booking");
 const Listing = require("../models/listing");
+const Notification = require("../models/notification");
 const { isLoggedIn } = require("../middleware/auth");
 const { validateBooking } = require("../middleware/validation");
 const { verifyCSRF, bookingLimiter } = require("../middleware/security");
@@ -111,6 +112,15 @@ router.post("/listings/:id/book", isLoggedIn, bookingLimiter, ...validateBooking
       totalPrice,
       specialRequests,
       status: listing.instantBook ? "confirmed" : "pending",
+    });
+
+    // Notify Host
+    await Notification.create({
+      recipient: listing.owner._id,
+      sender: req.user._id,
+      type: 'booking_new',
+      message: `${req.user.username} just booked your listing: ${listing.title}`,
+      link: `/bookings/host/${booking._id}`
     });
 
     if (wantsJson(req)) {
