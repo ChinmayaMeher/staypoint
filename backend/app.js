@@ -14,6 +14,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("./models/user.js");
+const Notification = require("./models/notification.js");
 
 // Import routes
 const listingRoutes = require("./routes/listingRoutes");
@@ -146,12 +147,27 @@ passport.deserializeUser(User.deserializeUser());
 app.use(csrfProtection);
 
 // ===== LOCALS FOR ALL VIEWS =====
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
   res.locals.isLoggedIn = req.isAuthenticated();
   res.locals.csrfToken = req.session.csrfToken;
+  
+  if (req.isAuthenticated()) {
+    try {
+      res.locals.unreadNotificationCount = await Notification.countDocuments({
+        recipient: req.user._id,
+        isRead: false
+      });
+    } catch (err) {
+      console.error("Error fetching notifications count:", err);
+      res.locals.unreadNotificationCount = 0;
+    }
+  } else {
+    res.locals.unreadNotificationCount = 0;
+  }
+  
   next();
 });
 
