@@ -24,6 +24,7 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 // Import middleware
 const {
@@ -191,6 +192,7 @@ app.use("/", userRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/wishlist", wishlistRoutes);
 app.use("/profile", profileRoutes);
+app.use("/notifications", notificationRoutes);
 
 // ===== 404 HANDLER =====
 app.use((req, res) => {
