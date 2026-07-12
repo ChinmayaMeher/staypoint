@@ -27,4 +27,22 @@ router.get('/', isLoggedIn, async (req, res) => {
   }
 });
 
+// PATCH /notifications/:id/read - Mark single notification as read
+router.patch('/:id/read', isLoggedIn, async (req, res) => {
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.id, recipient: req.user._id },
+      { isRead: true },
+      { new: true }
+    );
+    if (!notification) {
+      return res.status(404).json({ success: false, message: 'Notification not found' });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error marking notification as read:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
