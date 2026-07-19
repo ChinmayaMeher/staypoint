@@ -195,6 +195,37 @@
         margin-top: 20px;
       }
       
+      /* Dark Theme Overrides */
+      html.dark-theme body {
+        background-color: #121212;
+      }
+      html.dark-theme .ticket {
+        background: #1e1e1e;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+      html.dark-theme .ticket-left {
+        border-right-color: #333;
+      }
+      html.dark-theme .ticket-right {
+        background: #181818;
+      }
+      html.dark-theme .listing-title,
+      html.dark-theme .detail-value,
+      html.dark-theme .guest-info h4 {
+        color: #f9f5f2;
+      }
+      html.dark-theme .location,
+      html.dark-theme .detail-label,
+      html.dark-theme .guest-info p {
+        color: #a39994;
+      }
+      html.dark-theme .detail-box {
+        background: #2a2a2a;
+      }
+      html.dark-theme .guest-info {
+        border-top-color: #333;
+      }
+      
       @media (max-width: 768px) {
         .ticket {
           flex-direction: column;
@@ -285,6 +316,11 @@
     </div>
 
     <script>
+      // Apply theme
+      if (localStorage.getItem("staypoint_theme") === "dark") {
+        document.documentElement.classList.add("dark-theme");
+      }
+
       function downloadPDF() {
         const element = document.getElementById('ticket-content');
         const opt = {
