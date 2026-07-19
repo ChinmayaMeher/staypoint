@@ -407,6 +407,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function toggleTheme() {
     htmlEl.classList.toggle("dark-theme");
+    const isDark = htmlEl.classList.contains("dark-theme");
+    localStorage.setItem("staypoint_theme", isDark ? "dark" : "light");
+    updateToggleIcons();
+  }
+
+  function initTheme() {
+    const savedTheme = localStorage.getItem("staypoint_theme");
+    if (savedTheme === "dark") {
+      htmlEl.classList.add("dark-theme");
+    }
     updateToggleIcons();
   }
 
@@ -424,5 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (desktopToggle) desktopToggle.addEventListener("click", toggleTheme);
   if (mobileToggle) mobileToggle.addEventListener("click", toggleTheme);
+  
+  initTheme();
 });
 
