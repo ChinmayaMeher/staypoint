@@ -293,6 +293,19 @@ img {
   opacity: 1;
 }
 
+.dark-theme .flash-success {
+  background: #0f2c16;
+  color: #75b798;
+  border-left-color: #75b798;
+}
+.dark-theme .flash-error {
+  background: #2c0b0e;
+  color: #ea868f;
+  border-left-color: #ea868f;
+}
+.dark-theme .flash-close {
+  color: inherit;
+}
 @keyframes slideIn {
   from {
     transform: translateX(110%);
