@@ -396,3 +396,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+/* ========================================= */
+/*             DARK MODE TOGGLE              */
+/* ========================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const desktopToggle = document.getElementById("themeToggle");
+  const mobileToggle = document.getElementById("mobileThemeToggle");
+  const htmlEl = document.documentElement;
+
+  function toggleTheme() {
+    htmlEl.classList.toggle("dark-theme");
+    updateToggleIcons();
+  }
+
+  function updateToggleIcons() {
+    const isDark = htmlEl.classList.contains("dark-theme");
+    const iconClass = isDark ? "fa-sun" : "fa-moon";
+    
+    if (desktopToggle) {
+      desktopToggle.innerHTML = `<i class="fa ${iconClass}"></i>`;
+    }
+    if (mobileToggle) {
+      mobileToggle.innerHTML = `<i class="fa ${iconClass}"></i> Toggle Theme`;
+    }
+  }
+
+  if (desktopToggle) desktopToggle.addEventListener("click", toggleTheme);
+  if (mobileToggle) mobileToggle.addEventListener("click", toggleTheme);
+});
+
