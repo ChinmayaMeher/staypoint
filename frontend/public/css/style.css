@@ -1557,7 +1557,8 @@ select.form-control {
   overflow-y: auto;
   min-height: 230px;
   max-height: 330px;
-  background: #fbf8f5;
+  overflow-y: auto;
+  background: var(--light);
 }
 
 .chat-msg {
@@ -1620,11 +1621,15 @@ select.form-control {
 }
 
 .chatbot-form input[type="text"] {
-  min-width: 0;
+  flex: 1;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 11px 12px;
-  font: inherit;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  background: var(--light);
+  color: var(--dark);
 }
 
 .chatbot-form input[type="text"]:focus {
