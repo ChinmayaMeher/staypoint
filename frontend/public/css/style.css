@@ -22,6 +22,21 @@
   --transition: 0.22s ease;
 }
 
+.dark-theme {
+  --primary: #d9753e;
+  --primary-dark: #b85b28;
+  --primary-light: #2c1a12;
+  --accent: #4a8be8;
+  --dark: #f9f5f2;
+  --dark-2: #e8ddd6;
+  --mid: #a39994;
+  --light: #121212;
+  --white: #1e1e1e;
+  --border: #333333;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
 *,
 *::before,
 *::after {
