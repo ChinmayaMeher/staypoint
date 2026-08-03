@@ -1301,15 +1301,15 @@ select.form-control {
 }
 .footer-watermark {
   position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  text-align: center;
   font-family: var(--font-display);
-  font-size: 8.5vw;
+  font-size: 5vw;
   font-weight: 800;
   color: rgba(255, 255, 255, 0.03);
   pointer-events: none;
-  white-space: nowrap;
   line-height: 1;
   z-index: 0;
   user-select: none;
