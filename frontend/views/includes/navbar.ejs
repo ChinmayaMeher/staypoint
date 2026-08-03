@@ -22,22 +22,36 @@
           <span style="position: absolute; top: -5px; right: -10px; background-color: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; border: 2px solid white;"><%= unreadNotificationCount %></span>
         <% } %>
       </a>
-      <span class="nav-user">
-        <i class="fa fa-user-circle"></i> <%= currUser.username %>
-      </span>
-      <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
-        <a href="/listings/new" class="btn btn-outline">+ List Your Room</a>
-        <form action="/profile/switch-role" method="POST" style="display:inline;">
-          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-          <button type="submit" class="btn btn-ghost">Switch to Guest</button>
-        </form>
-      <% } else { %>
-        <form action="/profile/switch-role" method="POST" style="display:inline;">
-          <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
-          <button type="submit" class="btn btn-outline">Become a Host</button>
-        </form>
-      <% } %>
-      <a href="/logout" class="btn btn-ghost">Logout</a>
+      <div class="user-dropdown-container">
+        <button class="user-dropdown-btn" id="userDropdownBtn">
+          <i class="fa fa-bars"></i>
+          <i class="fa fa-user-circle"></i>
+        </button>
+        <div class="user-dropdown-menu" id="userDropdownMenu">
+          <div class="dropdown-header">
+            <strong><%= currUser.username %></strong>
+          </div>
+          <hr>
+          <a href="/profile" class="dropdown-item">Profile</a>
+          <a href="/bookings" class="dropdown-item">My Bookings</a>
+          <a href="/wishlist" class="dropdown-item">Wishlist</a>
+          <hr>
+          <% if (currUser.role === 'host' || currUser.role === 'admin') { %>
+            <a href="/listings/new" class="dropdown-item">+ List Your Room</a>
+            <form action="/profile/switch-role" method="POST" class="dropdown-form">
+              <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+              <button type="submit" class="dropdown-item">Switch to Guest</button>
+            </form>
+          <% } else { %>
+            <form action="/profile/switch-role" method="POST" class="dropdown-form">
+              <input type="hidden" name="_token" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+              <button type="submit" class="dropdown-item">Become a Host</button>
+            </form>
+          <% } %>
+          <hr>
+          <a href="/logout" class="dropdown-item">Logout</a>
+        </div>
+      </div>
     <% } else { %>
       <a href="/login" class="nav-link">Login</a>
       <a href="/signup" class="btn btn-primary">Sign Up</a>
