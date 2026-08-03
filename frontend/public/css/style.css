@@ -119,6 +119,59 @@ img {
   color: var(--primary);
 }
 
+.navbar-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.search-bar-global {
+  display: flex;
+  align-items: center;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 4px 8px 4px 20px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow var(--transition), border-color var(--transition), background-color 0.3s ease;
+}
+
+.search-bar-global:focus-within {
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+}
+
+.search-input-global {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--dark);
+}
+
+.search-btn-global {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.search-btn-global:hover {
+  background: var(--primary-dark);
+}
+
 .navbar-links {
   margin-left: auto;
   display: flex;
