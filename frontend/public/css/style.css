@@ -180,13 +180,29 @@ img {
 }
 
 .nav-link {
+  position: relative;
   font-size: 0.95rem;
   color: var(--mid);
   padding: 6px 4px;
   transition: color var(--transition);
+  text-decoration: none;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: var(--primary);
+  transition: width 0.3s ease;
 }
 .nav-link:hover {
   color: var(--primary);
+}
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .user-dropdown-container {
