@@ -438,3 +438,23 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
 });
 
+/* ========================================= */
+/*             USER DROPDOWN                 */
+/* ========================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const userBtn = document.getElementById("userDropdownBtn");
+  const userMenu = document.getElementById("userDropdownMenu");
+
+  if (userBtn && userMenu) {
+    userBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      userMenu.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!userMenu.contains(e.target)) {
+        userMenu.classList.remove("active");
+      }
+    });
+  }
+});
