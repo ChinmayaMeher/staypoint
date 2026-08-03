@@ -2,8 +2,17 @@
 const menuBtn = document.getElementById("menuBtn");
 const mobileMenu = document.getElementById("mobileMenu");
 if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener("click", () => {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     mobileMenu.classList.toggle("open");
+    menuBtn.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+      mobileMenu.classList.remove("open");
+      menuBtn.classList.remove("open");
+    }
   });
 }
 
