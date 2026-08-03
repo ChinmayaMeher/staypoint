@@ -154,6 +154,10 @@ img {
   color: var(--dark);
 }
 
+.search-input-global::placeholder {
+  color: var(--mid);
+}
+
 .search-btn-global {
   background: var(--primary);
   color: white;
