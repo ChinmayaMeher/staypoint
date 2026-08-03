@@ -1301,7 +1301,7 @@ select.form-control {
 }
 .footer-watermark {
   position: absolute;
-  bottom: -5px;
+  bottom: 20px;
   left: 0;
   width: 100%;
   text-align: center;
