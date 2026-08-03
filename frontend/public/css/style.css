@@ -416,6 +416,21 @@ img {
   color: var(--dark);
 }
 
+@media (max-width: 900px) {
+  .navbar-search {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+}
+
 /* ===== BUTTONS ===== */
 .btn {
   display: inline-flex;
