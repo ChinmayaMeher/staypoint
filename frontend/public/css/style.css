@@ -20,6 +20,7 @@
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --transition: 0.22s ease;
+  --navbar-bg: rgba(255, 255, 255, 0.85);
 }
 
 .dark-theme {
@@ -35,6 +36,7 @@
   --border: #333333;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --navbar-bg: rgba(30, 30, 30, 0.85);
 }
 
 *,
@@ -79,14 +81,23 @@ img {
   top: 0;
   z-index: 100;
   height: var(--navbar-h);
-  background: var(--white);
+  background: var(--navbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
   padding: 0 5%;
-  gap: 2rem;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.07);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  width: 100%;
 }
 
 .navbar-brand {
