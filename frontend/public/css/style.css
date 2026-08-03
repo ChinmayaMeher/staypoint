@@ -337,10 +337,35 @@ img {
   display: none;
   background: none;
   border: none;
-  font-size: 1.3rem;
-  color: var(--dark);
   cursor: pointer;
   margin-left: auto;
+  z-index: 1000;
+}
+
+.hamburger-animated {
+  width: 24px;
+  height: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hamburger-animated span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--dark);
+  border-radius: 2px;
+  transition: all 0.3s ease-in-out;
+}
+.mobile-menu-btn.open .hamburger-animated span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.mobile-menu-btn.open .hamburger-animated span:nth-child(2) {
+  opacity: 0;
+}
+.mobile-menu-btn.open .hamburger-animated span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 .mobile-menu {
