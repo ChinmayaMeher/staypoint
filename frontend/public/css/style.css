@@ -2420,3 +2420,6 @@ img { user-select: none; }
 
 /* Change 6: body overflow */
 body { overflow-x: hidden; }
+
+/* Change 7: link transition */
+a { transition: color 0.2s ease, opacity 0.2s ease; }
