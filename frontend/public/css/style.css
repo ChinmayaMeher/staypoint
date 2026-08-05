@@ -2402,3 +2402,6 @@ select.form-control {
 
 /* Change 1: smooth scroll padding */
 html { scroll-padding-top: var(--navbar-h); }
+
+/* Change 2: selection color */
+::selection { background: var(--primary-light); color: var(--primary-dark); }
