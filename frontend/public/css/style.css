@@ -2411,3 +2411,6 @@ html { scroll-padding-top: var(--navbar-h); }
 ::-webkit-scrollbar-track { background: var(--light); }
 ::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* Change 4: image selection */
+img { user-select: none; }
