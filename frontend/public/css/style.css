@@ -2405,3 +2405,9 @@ html { scroll-padding-top: var(--navbar-h); }
 
 /* Change 2: selection color */
 ::selection { background: var(--primary-light); color: var(--primary-dark); }
+
+/* Change 3: scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--light); }
+::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
