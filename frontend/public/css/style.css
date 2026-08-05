@@ -2399,3 +2399,6 @@ select.form-control {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; text-shadow: 0 0 15px rgba(168, 93, 56, 0.2); }
 }
+
+/* Change 1: smooth scroll padding */
+html { scroll-padding-top: var(--navbar-h); }
