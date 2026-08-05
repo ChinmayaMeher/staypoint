@@ -2423,3 +2423,6 @@ body { overflow-x: hidden; }
 
 /* Change 7: link transition */
 a { transition: color 0.2s ease, opacity 0.2s ease; }
+
+/* Change 8: responsive base font */
+@media (max-width: 768px) { html { font-size: 15px; } }
