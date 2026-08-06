@@ -99,6 +99,17 @@ document.addEventListener("click", function (e) {
   if (overlay && overlay.classList.contains("open") && e.target === overlay) {
     closeBookingModal();
   }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (userMenu.classList.contains("active")) userMenu.classList.remove("active");
+        if (mobileMenu && mobileMenu.classList.contains("open")) {
+          mobileMenu.classList.remove("open");
+          menuBtn.classList.remove("open");
+          menuBtn.setAttribute("aria-expanded", "false");
+        }
+      }
+    });
 });
 
 function bmShowPanel(num) {
