@@ -2447,3 +2447,6 @@ mark { background-color: var(--primary-light); color: var(--primary-dark); paddi
 
 /* Tables */
 table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; border-bottom: 1px solid var(--border); text-align: left; }
+
+/* Empty States */
+.empty-state { padding: 3rem 1rem; text-align: center; color: var(--mid); background: var(--white); border-radius: var(--radius); border: 1px dashed var(--border); }
