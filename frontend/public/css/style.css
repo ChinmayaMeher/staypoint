@@ -2429,3 +2429,6 @@ a { transition: color 0.2s ease, opacity 0.2s ease; }
 
 /* Token: Border Radius */
 :root { --radius-md: 16px; --radius-lg: 24px; }
+
+/* Navbar Search Focus */
+.search-bar-global:focus-within { box-shadow: 0 0 0 2px var(--primary); }
