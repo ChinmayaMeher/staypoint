@@ -2450,3 +2450,6 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 
 /* Empty States */
 .empty-state { padding: 3rem 1rem; text-align: center; color: var(--mid); background: var(--white); border-radius: var(--radius); border: 1px dashed var(--border); }
+
+/* Skeletons */
+@keyframes skeleton-loading { 0% { background-color: var(--border); } 100% { background-color: var(--light); } } .skeleton { animation: skeleton-loading 1s linear infinite alternate; border-radius: 4px; }
