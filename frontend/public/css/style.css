@@ -2432,3 +2432,6 @@ a { transition: color 0.2s ease, opacity 0.2s ease; }
 
 /* Navbar Search Focus */
 .search-bar-global:focus-within { box-shadow: 0 0 0 2px var(--primary); }
+
+/* Blockquotes */
+blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; font-style: italic; color: var(--mid); margin: 1rem 0; }
