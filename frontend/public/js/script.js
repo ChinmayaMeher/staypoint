@@ -6,6 +6,8 @@ if (menuBtn && mobileMenu) {
     e.stopPropagation();
     mobileMenu.classList.toggle("open");
     menuBtn.classList.toggle("open");
+    const isOpen = mobileMenu.classList.contains("open");
+    menuBtn.setAttribute("aria-expanded", isOpen);
   });
 
   document.addEventListener("click", (e) => {
