@@ -2426,3 +2426,6 @@ a { transition: color 0.2s ease, opacity 0.2s ease; }
 
 /* Change 8: responsive base font */
 @media (max-width: 768px) { html { font-size: 15px; } }
+
+/* Token: Border Radius */
+:root { --radius-md: 16px; --radius-lg: 24px; }
