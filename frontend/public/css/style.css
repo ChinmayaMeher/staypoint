@@ -2435,3 +2435,6 @@ a { transition: color 0.2s ease, opacity 0.2s ease; }
 
 /* Blockquotes */
 blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; font-style: italic; color: var(--mid); margin: 1rem 0; }
+
+/* Print optimizations */
+@media print { .navbar, .footer, .mobile-menu-btn { display: none !important; } body { background: white; color: black; } }
