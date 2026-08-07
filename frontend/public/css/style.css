@@ -2477,3 +2477,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 /* Architecture Note 11: Global image rules (max-width: 100%) prevent horizontal overflow on smaller screens. */
 
 /* Architecture Note 12: The footer is pushed to the bottom of the viewport using flex: 1 on the main container. */
+
+/* Architecture Note 13: Standard UI transitions use a global --transition token (0.22s ease) to ensure uniform animation speeds. */
