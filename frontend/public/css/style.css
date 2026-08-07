@@ -2461,3 +2461,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 /* Architecture Note 3: Typography scale uses a mix of rems and viewport units for fluid responsiveness across devices. */
 
 /* Architecture Note 4: The navbar is assigned z-index: 100 to ensure it always floats above main content cards. */
+
+/* Architecture Note 5: Mobile off-canvas menu uses fixed positioning and translates on the X-axis for smooth 60fps animations. */
