@@ -2473,3 +2473,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 /* Architecture Note 9: Button classes (.btn-primary, .btn-ghost) use unified padding and transitions for consistency. */
 
 /* Architecture Note 10: CSS Grid is preferred for structural page layouts, while Flexbox handles component-level alignment. */
+
+/* Architecture Note 11: Global image rules (max-width: 100%) prevent horizontal overflow on smaller screens. */
