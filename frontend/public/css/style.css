@@ -2455,3 +2455,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 @keyframes skeleton-loading { 0% { background-color: var(--border); } 100% { background-color: var(--light); } } .skeleton { animation: skeleton-loading 1s linear infinite alternate; border-radius: 4px; }
 
 /* Architecture Note 1: This stylesheet heavily relies on CSS Custom Properties (--var) for dynamic theming and easy maintenance. */
+
+/* Architecture Note 2: Dark mode is implemented by overriding root variables inside the .dark-theme body class. */
