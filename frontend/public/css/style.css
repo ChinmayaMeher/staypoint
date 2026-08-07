@@ -2457,3 +2457,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 /* Architecture Note 1: This stylesheet heavily relies on CSS Custom Properties (--var) for dynamic theming and easy maintenance. */
 
 /* Architecture Note 2: Dark mode is implemented by overriding root variables inside the .dark-theme body class. */
+
+/* Architecture Note 3: Typography scale uses a mix of rems and viewport units for fluid responsiveness across devices. */
