@@ -2475,3 +2475,5 @@ table { width: 100%; border-collapse: collapse; } th, td { padding: 0.75rem; bor
 /* Architecture Note 10: CSS Grid is preferred for structural page layouts, while Flexbox handles component-level alignment. */
 
 /* Architecture Note 11: Global image rules (max-width: 100%) prevent horizontal overflow on smaller screens. */
+
+/* Architecture Note 12: The footer is pushed to the bottom of the viewport using flex: 1 on the main container. */
